@@ -1,3 +1,4 @@
+#http://en.wikipedia.org/wiki/Base_36#Python_implementation
 def base36encode(number, alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
     """Converts an integer to a base36 string."""
     if not isinstance(number, (int, long)):

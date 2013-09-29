@@ -3,10 +3,9 @@ def getLinks(url):
     start = time.time()
 
     try:
-        if url.find('http') == 0: f = opener.open(url)
-        else: f = open(url, "r")
+        f = opener.open(url)
     except Exception, e:
-        printlog('Error opening links datasource: %s'  % e, 'exception')
+        printlog('Error opening links datasource: %s'  % e, 'error')
         return
 
     rJSON = f.read()
@@ -14,28 +13,32 @@ def getLinks(url):
 
     try: links = json.loads(rJSON)
     except Exception, e:
-        printlog('Error parsing links file: %s' % e, 'exception')
+        printlog('Error parsing links file: %s' % e, 'error')
         return
 
     for l in links['data']['children']:
         try:
             try:
                 if l['kind'] == 't3':
-                    cur.execute("""replace into t3 (
-                                    id, 
-                                    title, 
-                                    url, 
-                                    permalink, 
-                                    created_utc,
-                                    last_seen,
-                                    last_crawled
-                                ) values (%s, %s, %s, %s, %s, now(), 0)""", (
-                                    base36decode(l['data']['id']), 
-                                    l['data']['title'], 
-                                    l['data']['url'], 
-                                    l['data']['permalink'], 
-                                    datetime.datetime.fromtimestamp(l['data']['created_utc'])
-                                ))
+                    cur.execute("select id from t3 where id = %s", (base36decode(l['data']['id']),))
+                    if cur.rowcount > 0:
+                        cur.execute("update t3 set last_seen = now() where id = %s", (base36decode(l['data']['id']),))
+                    else:
+                        cur.execute("""insert into t3 (
+                                        id, 
+                                        title, 
+                                        url, 
+                                        permalink, 
+                                        created,
+                                        last_seen,
+                                        last_crawled
+                                    ) values (%s, %s, %s, %s, %s, now(), 0)""", (
+                                        base36decode(l['data']['id']), 
+                                        l['data']['title'], 
+                                        l['data']['url'], 
+                                        l['data']['permalink'], 
+                                        datetime.datetime.fromtimestamp(l['data']['created_utc'])
+                                    ))
                     db.commit()
 
             except Exception, e:

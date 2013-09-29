@@ -8,14 +8,12 @@ if 'quit' in _:
     printlog("Quit flag found in conf.py (you should probably at least look at the configuration before running, yeah?)")
     exit(1)
 
-try:
-    execfile('logging.py')
-    execfile('lib.py')
-    execfile('getlinks.py')
-    execfile('getcomments.py')
-except Exception, e:
-    printlog("Can't open alllibrary files: " + ': %s' % e, 'exception')
-    exit(1)
+execfile('lib.py')
+execfile('timing.py')
+execfile('logging.py')
+execfile('getlinks.py')
+execfile('getcomments.py')
+
 
 try: db = MySQLdb.connect(host=_['db_host'], db=_['db_name'], user=_['db_user'], passwd=_['db_pass'], charset='utf8')
 except Exception, e:
@@ -29,9 +27,9 @@ try: cur.execute("""create table if not exists t3 (
                         title text, 
                         url text, 
                         permalink text,
-                        created_utc timestamp,
-                        last_seen timestamp,
-                        last_crawled timestamp,
+                        created datetime,
+                        last_seen datetime,
+                        last_crawled datetime,
                         primary key(id)
                     ) engine=InnoDB character set=utf8""")
 except Exception, e:
@@ -44,8 +42,8 @@ try: cur.execute("""create table if not exists t1 (
                         parent_id text,
                         body text, 
                         author text,
-                        created_utc timestamp,
-                        last_seen timestamp,
+                        created datetime,
+                        last_seen datetime,
                         primary key(id)
                     ) engine=InnoDB character set=utf8""")
 except Exception, e:

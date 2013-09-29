@@ -7,10 +7,9 @@ def getComments(url):
     start = time.time()
     
     try:
-        if url.find('http') == 0: f = opener.open(url)
-        else: f = open(url, "r")
+        f = opener.open(url)
     except Exception, e:
-        printlog('Error opening links datasource: %s'  % e, 'exception')
+        printlog('Error opening links datasource: %s'  % e, 'error')
         return
 
     rJSON = f.read()
@@ -18,7 +17,7 @@ def getComments(url):
 
     try: comments = json.loads(rJSON)
     except Exception, e:
-        printlog('Error parsing comments file: %s' % e, 'exception')
+        printlog('Error parsing comments file: %s' % e, 'error')
         return
 
     ccount = 0
@@ -41,7 +40,7 @@ def getComment(nodes):
                                     parent_id,
                                     body, 
                                     author,
-                                    created_utc,
+                                    created,
                                     last_seen
                                 ) values (%s, %s, %s, %s, %s, %s, now())""", (
                                     base36decode(node['data']['id']), 
