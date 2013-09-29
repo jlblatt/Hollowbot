@@ -4,7 +4,7 @@
 ############################################
 # >> Email: jlblatt+hollowbot@gmail.com
 # >> Git: https://github.com/jlblatt/Hollowbot
-# >> See conf.py for more info
+# >> See README and conf.py for more info
 ##########################
 
 # TODO:
@@ -12,7 +12,6 @@
 # - add timing code to determine if/when to crawl
 # - use data->after @ end of getlinks.py to do multiple pages
 # - setup reddit account and integrate api
-# - create git repo
 
 import datetime
 import json
@@ -20,17 +19,15 @@ import MySQLdb
 import re
 import time
 import urllib2
+import warnings
+
+warnings.filterwarnings('ignore', category = MySQLdb.Warning)
 
 START_TIME = time.time()
 LINK_TIMES = {'counts' : [] , 'times' : []}
 COMMENT_TIMES = {'counts' : [] , 'times' : []}
 
-execfile('conf.py')
-execfile('logging.py')
 execfile('init.py')
-execfile('lib.py')
-execfile('getlinks.py')
-execfile('getcomments.py')
 
 for url in _['crawl_urls']:
     getLinks(url)

@@ -1,3 +1,22 @@
+try: execfile('conf.py')
+except Exception, e:
+    printlog("Can't open conf.py (did you read the README and rename example.conf? no?): " + ': %s' % e, 'exception')
+    exit(1)
+
+# Check to make sure the user actually looked at the conf file
+if 'quit' in _:
+    printlog("Quit flag found in conf.py (you should probably at least look at the configuration before running, yeah?)")
+    exit(1)
+
+try:
+    execfile('logging.py')
+    execfile('lib.py')
+    execfile('getlinks.py')
+    execfile('getcomments.py')
+except Exception, e:
+    printlog("Can't open alllibrary files: " + ': %s' % e, 'exception')
+    exit(1)
+
 try: db = MySQLdb.connect(host=_['db_host'], db=_['db_name'], user=_['db_user'], passwd=_['db_pass'], charset='utf8')
 except Exception, e:
     printlog("Can't open database connection: " + ': %s' % e, 'exception')
