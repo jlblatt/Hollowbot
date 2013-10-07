@@ -1,23 +1,15 @@
-try: execfile('conf.py')
-except Exception, e:
-    printlog("Can't open conf.py (did you read the README and rename example.conf? no?): " + ': %s' % e, 'exception')
-    exit(1)
+import MySQLdb
+import urllib2
+import warnings
 
-# Check to make sure the user actually looked at the conf file
-if 'quit' in _:
-    printlog("Quit flag found in conf.py (you should probably at least look at the configuration before running, yeah?)")
-    exit(1)
+from conf import _
+from logging import printLog
 
-execfile('lib.py')
-execfile('timing.py')
-execfile('logging.py')
-execfile('getlinks.py')
-execfile('getcomments.py')
-
+warnings.filterwarnings('ignore', category = MySQLdb.Warning)
 
 try: db = MySQLdb.connect(host=_['db_host'], db=_['db_name'], user=_['db_user'], passwd=_['db_pass'], charset='utf8')
 except Exception, e:
-    printlog("Can't open database connection: " + ': %s' % e, 'exception')
+    printLog("Can't open database connection: " + ': %s' % e, 'exception')
     exit(1)
 
 cur = db.cursor()
@@ -33,7 +25,7 @@ try: cur.execute("""create table if not exists t3 (
                         primary key(id)
                     ) engine=InnoDB character set=utf8""")
 except Exception, e:
-    printlog("Can't create table `t3`: " + ': %s' % e, 'exception')
+    printLog("Can't create table `t3`: " + ': %s' % e, 'exception')
     exit(1)
 
 try: cur.execute("""create table if not exists t1 (
@@ -47,12 +39,12 @@ try: cur.execute("""create table if not exists t1 (
                         primary key(id)
                     ) engine=InnoDB character set=utf8""")
 except Exception, e:
-    printlog("Can't create table `t1`: " + ': %s' % e, 'exception')
+    printLog("Can't create table `t1`: " + ': %s' % e, 'exception')
     exit(1)
 
 try:
     opener = urllib2.build_opener()
     opener.addheaders = [('User-agent', _['name'] + ' ' + _['version'] + ' (' + _['description'] + ') by ' + _['author'] + ' | ' + _['author_url'] + ' | ' + _['author_email'])]
 except Exception, e:
-    printlog("Can't create urllib2 opener: " + ': %s' % e, 'exception')
+    printLog("Can't create urllib2 opener: " + ': %s' % e, 'exception')
     exit(1)

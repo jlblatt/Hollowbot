@@ -11,4 +11,4 @@ Hollowbot is currently in ALPHA.
 1. Read this entire file before doing anything
 2. Move example-conf.py to conf.py and replace default values with your own (bot info, database credentials, etc...)
 3. Remove the last line of conf.py
-4. Run hollowbot.py
+4. Run hollowbot.py (don't forget to chmod +x)

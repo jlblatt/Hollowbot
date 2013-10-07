@@ -1,15 +1,25 @@
+import datetime
+import json
+import time
+import urllib2
+
+from logging import printLog
+from init import *
+from lib import *
+from timing import COMMENT_TIMES
+
 ccount = 0
 
-def getComments(url):
+def get(url):
     global ccount
 
-    printlog("Getting comments from: " + url + "...", 'message')
+    printLog("Getting comments from: " + url + "...", 'message')
     start = time.time()
     
     try:
         f = opener.open(url)
     except Exception, e:
-        printlog('Error opening links datasource: %s'  % e, 'error')
+        printLog('Error opening links datasource: %s'  % e, 'error')
         return
 
     rJSON = f.read()
@@ -17,17 +27,17 @@ def getComments(url):
 
     try: comments = json.loads(rJSON)
     except Exception, e:
-        printlog('Error parsing comments file: %s' % e, 'error')
+        printLog('Error parsing comments file: %s' % e, 'error')
         return
 
     ccount = 0
-    getComment(comments)
+    getCommentTree(comments)
     COMMENT_TIMES['counts'].append(ccount)
     COMMENT_TIMES['times'].append(time.time() - start)
 
 
 
-def getComment(nodes):
+def getCommentTree(nodes):
     global ccount
 
     for node in nodes:
@@ -54,14 +64,14 @@ def getComment(nodes):
                     ccount += 1
 
                     if node['data']['replies'] != "":
-                        getComment([node['data']['replies']])
+                        getCommentTree([node['data']['replies']])
 
                 except Exception, e:
-                    printlog('Error storing t1_' + node['data']['id'] + ': %s' % e, 'exception')
+                    printLog('Error storing t1_' + node['data']['id'] + ': %s' % e, 'exception')
                     db.rollback()
 
             elif node['kind'] == "Listing":
-                getComment(node['data']['children']) 
+                getCommentTree(node['data']['children']) 
 
         except Exception, e:
-            printlog('Error checking comments file node type: %s' % e, 'exception')
+            printLog('Error checking comments file node type: %s' % e, 'exception')
