@@ -3,13 +3,13 @@ import urllib2
 import warnings
 
 from conf import _
-from logging import printLog
+import log
 
 warnings.filterwarnings('ignore', category = MySQLdb.Warning)
 
 try: db = MySQLdb.connect(host=_['db_host'], db=_['db_name'], user=_['db_user'], passwd=_['db_pass'], charset='utf8')
 except Exception, e:
-    printLog("Can't open database connection: " + ': %s' % e, 'exception')
+    log.write("Can't open database connection: %s" % e, 'exception')
     exit(1)
 
 cur = db.cursor()
@@ -25,7 +25,7 @@ try: cur.execute("""create table if not exists t3 (
                         primary key(id)
                     ) engine=InnoDB character set=utf8""")
 except Exception, e:
-    printLog("Can't create table `t3`: " + ': %s' % e, 'exception')
+    log.write("Can't create table `t3`: %s" % e, 'exception')
     exit(1)
 
 try: cur.execute("""create table if not exists t1 (
@@ -39,12 +39,12 @@ try: cur.execute("""create table if not exists t1 (
                         primary key(id)
                     ) engine=InnoDB character set=utf8""")
 except Exception, e:
-    printLog("Can't create table `t1`: " + ': %s' % e, 'exception')
+    log.write("Can't create table `t1`: %s" % e, 'exception')
     exit(1)
 
 try:
     opener = urllib2.build_opener()
     opener.addheaders = [('User-agent', _['name'] + ' ' + _['version'] + ' (' + _['description'] + ') by ' + _['author'] + ' | ' + _['author_url'] + ' | ' + _['author_email'])]
 except Exception, e:
-    printLog("Can't create urllib2 opener: " + ': %s' % e, 'exception')
+    log.write("Can't create urllib2 opener: %s" % e, 'exception')
     exit(1)

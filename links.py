@@ -3,19 +3,19 @@ import json
 import time
 import urllib2
 
-from logging import printLog
-from init import *
+import log
+from init import db, cur, opener
 from lib import *
-from timing import LINK_TIMES
+from timing import linkTimes
 
 def get(url):
-    printLog("Getting links from: " + url + "...", 'message')
+    log.write("Getting links from: " + url + "...", 'message')
     start = time.time()
 
     try:
         f = opener.open(url)
     except Exception, e:
-        printLog('Error opening links datasource: %s'  % e, 'error')
+        log.write('Error opening links datasource: %s'  % e, 'error')
         return
 
     rJSON = f.read()
@@ -23,7 +23,7 @@ def get(url):
 
     try: links = json.loads(rJSON)
     except Exception, e:
-        printLog('Error parsing links file: %s' % e, 'error')
+        log.write('Error parsing links file: %s' % e, 'error')
         return
 
     for l in links['data']['children']:
@@ -52,12 +52,12 @@ def get(url):
                     db.commit()
 
             except Exception, e:
-                printLog('Error storing t3_' + l['data']['id'] + ': %s' % e, 'exception')
+                log.write('Error storing t3_' + l['data']['id'] + ': %s' % e, 'exception')
                 db.rollback()
 
         except Exception, e:
-            printLog('Error checking links file node type: %s' % e, 'exception')
+            log.write('Error checking links file node type: %s' % e, 'exception')
 
-    LINK_TIMES['counts'].append(len(links['data']['children']))
-    LINK_TIMES['times'].append(time.time() - start)
+    linkTimes['counts'].append(len(links['data']['children']))
+    linkTimes['times'].append(time.time() - start)
     return links['data']['after']

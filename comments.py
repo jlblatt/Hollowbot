@@ -3,23 +3,23 @@ import json
 import time
 import urllib2
 
-from logging import printLog
-from init import *
+import log
+from init import db, cur, opener
 from lib import *
-from timing import COMMENT_TIMES
+from timing import commentTimes
 
 ccount = 0
 
 def get(url):
     global ccount
 
-    printLog("Getting comments from: " + url + "...", 'message')
+    log.write("Getting comments from: " + url + "...", 'message')
     start = time.time()
     
     try:
         f = opener.open(url)
     except Exception, e:
-        printLog('Error opening links datasource: %s'  % e, 'error')
+        log.write('Error opening links datasource: %s'  % e, 'error')
         return
 
     rJSON = f.read()
@@ -27,13 +27,13 @@ def get(url):
 
     try: comments = json.loads(rJSON)
     except Exception, e:
-        printLog('Error parsing comments file: %s' % e, 'error')
+        log.write('Error parsing comments file: %s' % e, 'error')
         return
 
     ccount = 0
     getCommentTree(comments)
-    COMMENT_TIMES['counts'].append(ccount)
-    COMMENT_TIMES['times'].append(time.time() - start)
+    commentTimes['counts'].append(ccount)
+    commentTimes['times'].append(time.time() - start)
 
 
 
@@ -67,11 +67,11 @@ def getCommentTree(nodes):
                         getCommentTree([node['data']['replies']])
 
                 except Exception, e:
-                    printLog('Error storing t1_' + node['data']['id'] + ': %s' % e, 'exception')
+                    log.write('Error storing t1_' + node['data']['id'] + ': %s' % e, 'exception')
                     db.rollback()
 
             elif node['kind'] == "Listing":
                 getCommentTree(node['data']['children']) 
 
         except Exception, e:
-            printLog('Error checking comments file node type: %s' % e, 'exception')
+            log.write('Error checking comments file node type: %s' % e, 'exception')

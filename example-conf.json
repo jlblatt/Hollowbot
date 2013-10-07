@@ -1,0 +1,28 @@
+{
+    "name" : "Hollowbot Clone",
+    "version" : "1.0a1",
+    "description" : "github clone of Hollowbot",
+    "author" : "Author Name",
+    "author_url" : "/user/xxx/",
+    "author_email" : "foo@bar.com",
+
+    "db_host" : "db_host",
+    "db_name" : "db_name",
+    "db_user" : "db_user",
+    "db_pass" : "db_pass",
+
+    "logging" : true,
+    "logtypes" : ["exception", "error", "stat", "message"],
+    "logfile" : "log.txt",
+
+    "crawl_urls" : [
+        "http://www.reddit.com/.json?limit=100"
+    ],
+
+    "recrawl_links_after" : 3600,
+    "delete_links_after" : 86400,
+
+    "quit" : true,
+
+    "sleep" : 10
+}

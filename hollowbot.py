@@ -8,23 +8,15 @@
 ##########################
 
 # TODO:
-# - move execfiles to modules
 # - use data->after @ end of getlinks.py to do multiple pages
 # - setup reddit account and integrate api
-# - make conf JSON
 
 from time import sleep
 
 from conf import _
 
-# Check to make sure the user actually looked at the conf file
-if 'quit' in _:
-    print("Quit flag found in conf.py (you should probably at least look at the configuration before running, yeah?)")
-    exit(1)
-
-from logging import printLog
-from init import *
-
+import log
+from init import db, cur
 import links
 import comments
 import timing
@@ -32,6 +24,7 @@ import timing
 # Crawls URLS from datasources
 for url in _['crawl_urls']:
     links.get(url)
+    sleep(_['sleep'])
 
 #Delete old links
 cur.execute("delete from t3 where created < date_sub(now(), interval %s second)", (_['delete_links_after']))
