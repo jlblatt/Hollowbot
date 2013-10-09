@@ -1,6 +1,5 @@
 *.sublime-*
 sftp-config.json
-conf.py
 conf.json
 
 #################
