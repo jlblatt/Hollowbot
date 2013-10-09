@@ -10,25 +10,29 @@
 # TODO:
 # - use data->after @ end of getlinks.py to do multiple pages
 # - setup reddit account and integrate api
+# - cleanup _ conf variable
+# - change crawl URLs to subreddits
+# - add command line args
 
 from time import sleep
 
 from conf import _
 
-import log
 from init import db, cur
+import log
 import links
 import comments
-import timing
+import stats
+
+#Delete old links and comments
+if _['delete_links_after'] > -1: cur.execute("delete from t3 where created < date_sub(now(), interval %s second)", (_['delete_links_after'],))
+if _['delete_comments_after'] > -1: cur.execute("delete from t1 where created < date_sub(now(), interval %s second)", (_['delete_comments_after'],))
+db.commit();
 
 # Crawls URLS from datasources
 for url in _['crawl_urls']:
     links.get(url)
     sleep(_['sleep'])
-
-#Delete old links
-cur.execute("delete from t3 where created < date_sub(now(), interval %s second)", (_['delete_links_after']))
-db.commit();
 
 #Crawl eligible links
 cur.execute("select id, permalink from t3 where last_crawled < date_sub(now(), interval %s second)", (_['recrawl_links_after'],))
@@ -39,7 +43,7 @@ for c in cur.fetchall():
     db.commit()
     sleep(_['sleep'])
 
-timing.printStats()
+stats.printStats()
 
 db.close()
-log.close()
+log.log.close()

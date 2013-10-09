@@ -21,6 +21,7 @@
 
     "recrawl_links_after" : 3600,
     "delete_links_after" : 86400,
+    "delete_comments_after" : 604800,
 
     "quit" : true,
 

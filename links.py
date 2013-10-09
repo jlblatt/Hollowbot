@@ -3,17 +3,16 @@ import json
 import time
 import urllib2
 
-import log
 from init import db, cur, opener
-from lib import *
-from timing import linkTimes
+import log
+import lib
+import stats
 
 def get(url):
     log.write("Getting links from: " + url + "...", 'message')
     start = time.time()
 
-    try:
-        f = opener.open(url)
+    try: f = opener.open(url)
     except Exception, e:
         log.write('Error opening links datasource: %s'  % e, 'error')
         return
@@ -30,9 +29,9 @@ def get(url):
         try:
             try:
                 if l['kind'] == 't3':
-                    cur.execute("select id from t3 where id = %s", (base36decode(l['data']['id']),))
+                    cur.execute("select id from t3 where id = %s", (lib.base36decode(l['data']['id']),))
                     if cur.rowcount > 0:
-                        cur.execute("update t3 set last_seen = now() where id = %s", (base36decode(l['data']['id']),))
+                        cur.execute("update t3 set last_seen = now() where id = %s", (lib.base36decode(l['data']['id']),))
                     else:
                         cur.execute("""insert into t3 (
                                         id, 
@@ -43,7 +42,7 @@ def get(url):
                                         last_seen,
                                         last_crawled
                                     ) values (%s, %s, %s, %s, %s, now(), 0)""", (
-                                        base36decode(l['data']['id']), 
+                                        lib.base36decode(l['data']['id']), 
                                         l['data']['title'], 
                                         l['data']['url'], 
                                         l['data']['permalink'], 
@@ -58,6 +57,6 @@ def get(url):
         except Exception, e:
             log.write('Error checking links file node type: %s' % e, 'exception')
 
-    linkTimes['counts'].append(len(links['data']['children']))
-    linkTimes['times'].append(time.time() - start)
+    stats.linkTimes['counts'].append(len(links['data']['children']))
+    stats.linkTimes['times'].append(time.time() - start)
     return links['data']['after']

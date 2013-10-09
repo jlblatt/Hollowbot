@@ -3,23 +3,24 @@ import json
 import time
 import urllib2
 
-import log
 from init import db, cur, opener
-from lib import *
-from timing import commentTimes
+import log
+import lib
+import stats
 
 ccount = 0
 
 def get(url):
     global ccount
 
+    url = url.encode('ascii', 'ignore')
+
     log.write("Getting comments from: " + url + "...", 'message')
     start = time.time()
     
-    try:
-        f = opener.open(url)
+    try: f = opener.open(url)
     except Exception, e:
-        log.write('Error opening links datasource: %s'  % e, 'error')
+        log.write('Error opening comments datasource: %s'  % e, 'error')
         return
 
     rJSON = f.read()
@@ -32,8 +33,8 @@ def get(url):
 
     ccount = 0
     getCommentTree(comments)
-    commentTimes['counts'].append(ccount)
-    commentTimes['times'].append(time.time() - start)
+    stats.commentTimes['counts'].append(ccount)
+    stats.commentTimes['times'].append(time.time() - start)
 
 
 
@@ -53,7 +54,7 @@ def getCommentTree(nodes):
                                     created,
                                     last_seen
                                 ) values (%s, %s, %s, %s, %s, %s, now())""", (
-                                    base36decode(node['data']['id']), 
+                                    lib.base36decode(node['data']['id']), 
                                     node['data']['link_id'],
                                     node['data']['parent_id'], 
                                     node['data']['body'], 

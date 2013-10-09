@@ -1,3 +1,5 @@
+**Read this entire file before doing anything**
+
 # Description
 
 Hollowbot is an attempt to create an open-source framework for a reddit bot to crawl, interpret, and respond to comments.  Users deploying the bot can provide a configuration/ruleset to control its behavior.
@@ -7,11 +9,43 @@ Hollowbot is an attempt to create an open-source framework for a reddit bot to c
 Hollowbot is currently in ALPHA.
 
 # Quickstart
+ 
+1. Move example-conf.json to conf.json and replace default values with your own (bot info, database credentials, etc...)
+2. Remove the 'quit' definition (2nd from bottom) from conf.json
+3. Run `python hollowbot.py`
 
-1. Read this entire file before doing anything
-2. Move example-conf.json to conf.json and replace default values with your own (bot info, database credentials, etc...)
-3. Remove the 'quit' definition (2nd from bottom) from conf.json
-4. Run hollowbot.py (don't forget to chmod +x)
+# conf.json Fields
+
+### Bot General Info
+
+This information is concatinated and included in the User-Agent string
+
+*"name"
+*"version"
+*"description"
+*"author"
+*"author_url"
+*"author_email"
+
+### Database Credentials
+
+*"db_host" : "localhost",
+*"db_name" : "cortextu_hollowbot",
+*"db_user" : "cortextu_hollow",
+*"db_pass" : "ED=26xE,Av}u",
+
+### Logging
+
+*"logging" : When true, bot will attempt to write onscreen messages to a log file (specified below)
+*"logtypes" : Array of message types to write to log.  Choices are: "exception", "error", "stat", "message"
+*"logfile" : Path to log file
+
+### Crawl Configuration
+*"crawl_urls" : Array of URLs bot should gather links from
+*"recrawl_links_after" : Time (in seconds) to recrawl comments from one thread (measured from the link's last crawled timestamp).  0 = always crawl all links
+*"delete_links_after" : Time (in seconds) until a found link is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete links immediately.  -1 = never delete links.
+*"delete_comments_after" : Time (in seconds) until a comment is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete comments immediately.  -1 = never delete comments.
+*"sleep" : Time (in seconds) to sleep between server requests
 
 ## Reddit API Notice
 
