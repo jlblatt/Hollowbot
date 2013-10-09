@@ -20,32 +20,32 @@ Hollowbot is currently in ALPHA.
 
 This information is concatinated and included in the User-Agent string
 
-*"name"
-*"version"
-*"description"
-*"author"
-*"author_url"
-*"author_email"
+* "name"
+* "version"
+* "description"
+* "author"
+* "author_url"
+* "author_email"
 
 ### Database Credentials
 
-*"db_host" : "localhost",
-*"db_name" : "cortextu_hollowbot",
-*"db_user" : "cortextu_hollow",
-*"db_pass" : "ED=26xE,Av}u",
+* "db_host"
+* "db_name"
+* "db_user"
+* "db_pass"
 
 ### Logging
 
-*"logging" : When true, bot will attempt to write onscreen messages to a log file (specified below)
-*"logtypes" : Array of message types to write to log.  Choices are: "exception", "error", "stat", "message"
-*"logfile" : Path to log file
+* "logging" : When true, bot will attempt to write onscreen messages to a log file (specified below)
+* "logtypes" : Array of message types to write to log.  Choices are: "exception", "error", "stat", "message"
+* "logfile" : Path to log file
 
 ### Crawl Configuration
-*"crawl_urls" : Array of URLs bot should gather links from
-*"recrawl_links_after" : Time (in seconds) to recrawl comments from one thread (measured from the link's last crawled timestamp).  0 = always crawl all links
-*"delete_links_after" : Time (in seconds) until a found link is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete links immediately.  -1 = never delete links.
-*"delete_comments_after" : Time (in seconds) until a comment is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete comments immediately.  -1 = never delete comments.
-*"sleep" : Time (in seconds) to sleep between server requests
+* "crawl_urls" : Array of URLs bot should gather links from
+* "recrawl_links_after" : Time (in seconds) to recrawl comments from one thread (measured from the link's last crawled timestamp).  0 = always crawl all links
+* "delete_links_after" : Time (in seconds) until a found link is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete links immediately.  -1 = never delete links.
+* "delete_comments_after" : Time (in seconds) until a comment is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete comments immediately.  -1 = never delete comments.
+* "sleep" : Time (in seconds) to sleep between server requests
 
 ## Reddit API Notice
 
