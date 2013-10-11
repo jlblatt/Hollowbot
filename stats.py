@@ -8,6 +8,9 @@ linkTimes = {'counts' : [] , 'times' : []}
 commentTimes = {'counts' : [] , 'times' : []}
 
 def printStats():
+    cur.execute("select count(*) from crawl_locations")
+    locationTotal = cur.fetchone()[0]
+
     linkLocations = len(linkTimes['counts'])
     linkCount = sum(linkTimes['counts'])
     linkElapsedTime = sum(linkTimes['times'])
@@ -27,7 +30,7 @@ def printStats():
     totalElapsed = time.time() - startTime
 
     log.write("%d link(s) / %f sec. (%f sec. ea.) in %d location(s)" % (linkCount, linkElapsedTime, linkRate, linkLocations), 'stat')
-    log.write("%d comment(s) / %f sec. (%f sec. ea.) in %d location(s)" % (commentCount, commentElapsedTime, commentRate, commentLocations), 'stat')
-    log.write("%d link(s) and %d comment(s) currently in database" % (linkTotal, commentTotal), 'stat')
+    log.write("%d comment(s) / %f sec. (%f sec. ea.) in %d threads(s)" % (commentCount, commentElapsedTime, commentRate, commentLocations), 'stat')
+    log.write("%d location(s) / %d link(s) / %d comment(s) currently in database" % (locationTotal, linkTotal, commentTotal), 'stat')
     log.write("Execution took %f sec." % (totalElapsed,), 'stat')
 

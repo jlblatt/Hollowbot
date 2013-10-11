@@ -10,7 +10,7 @@ confFile.close()
 
 try: _ = json.loads(confJSON)
 except Exception, e:
-    print 'Error parsing conf.json: %s' % e
+    print 'Error parsing conf.json (try http://jsonlint.com/): %s' % e
     exit(1)
 
 # Check to make sure the user actually looked at the conf file
