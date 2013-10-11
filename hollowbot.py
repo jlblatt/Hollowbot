@@ -10,9 +10,14 @@
 # TODO:
 # - use data->after @ end of links to do multiple pages
 # - use data->after @ end of comments to do full threads
-# - setup reddit account and integrate api
+
+# - http://docs.python-requests.org/en/latest/index.html and then:
+# - setup reddit account and integrate api, respond to a comment!
+
 # - cleanup _ conf variable
 # - classes?
+
+
 
 from sys import argv
 from time import sleep

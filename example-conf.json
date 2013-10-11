@@ -11,6 +11,9 @@
     "db_user" : "db_user",
     "db_pass" : "db_pass",
 
+    "reddit_username" : "userxxx",
+    "reddit_password" : "passxxx",
+
     "logging" : true,
     "logtypes" : ["exception", "error", "stat", "message"],
     "logfile" : "log.txt",
@@ -25,6 +28,8 @@
     "crawl_urls" : [
         "http://www.reddit.com/r/hollowbot/"
     ],
+
+    "page_limit" : 5,
 
     "find_links_after" : 3600,
     "recrawl_links_after" : 1800,

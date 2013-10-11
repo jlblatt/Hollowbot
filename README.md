@@ -10,19 +10,19 @@ Hollowbot is currently in ALPHA.
 
 # Quickstart
  
-1. Move example-conf.json to conf.json and replace default values with your own (bot info, database credentials, etc...)
-2. Remove the 'quit' definition (2nd from bottom) from conf.json
+1. Move `example-conf.json` to `conf.json` and replace default values with your own (bot info, database credentials, etc...)
+2. Remove the `quit` definition (2nd from bottom) from `conf.json`
 3. Run `python hollowbot.py`
 
 # Command Line Arguments
 
 Hollowbot accepts several command line arguments to control which functions to perform.  They are listed below in order of execution.  Running the bot without any arguments performs all functions except 'wipe'.
 
-* wipe - delete all stored data and log files when complete
-* cleanup - Remove old links/comments from database
-* locations - Build and store list of all locations to retrieve links
-* links - Crawl URLs and retrieve links to comment threads
-* comments - Get comments from all stored threads
+* `wipe` - delete all stored data and log files when complete
+* `cleanup` - Remove old links/comments from database
+* `locations` - Build and store list of all locations to retrieve links
+* `links` - Crawl URLs and retrieve links to comment threads
+* `comments` - Get comments from all stored threads
 
 # conf.json Fields
 
@@ -30,46 +30,42 @@ Hollowbot accepts several command line arguments to control which functions to p
 
 This information is concatinated and included in the User-Agent string
 
-* name
-* version
-* description
-* author
-* author_url
-* author_email
+* `name`
+* `version`
+* `description`
+* `author`
+* `author_url`
+* `author_email`
 
 ### Database Credentials
 
-* db_host
-* db_name
-* db_user
-* db_pass
+* `db_host`
+* `db_name`
+* `db_user`
+* `db_pass`
+
+### reddit Credentials
+
+* `reddit_username`
+* `reddit_password`
 
 ### Logging
 
-* logging
-    * When true, bot will attempt to write onscreen messages to a log file (specified below)
-* logtypes
-    * Array of message types to write to log.  Choices are: "exception", "error", "stat", "message"
-* logfile
-    * Path to log file
+* `logging` - When true, bot will attempt to write onscreen messages to a log file (specified below)
+* `logtypes` - Array of message types to write to log.  Choices are: "exception", "error", "stat", "message"
+* `logfile` - Path to log file
 
 ### Crawl Configuration
-* crawl_subreddits
-    * Array of objects bot should gather links from, with two fields each:
+* `crawl_subreddits` - Array of objects bot should gather links from, with two fields each:
         * subreddit - name of the subreddit (what comes after r/...)
         * sort - array of sort techniques to retrieve results.  'all' is the default front page listing.  Other options are 'hot', 'new', 'rising', 'controversial', 'top', 'gilded'.
-* crawl_urls
-    * Array of additional URLs bot should gather links from (does not include .json or URL arguments)
-* find_links_after
-    * Time (in seconds) before recrawling a subreddit page or crawl url
-* recrawl_links_after
-    * Time (in seconds) to recrawl comments from one thread (measured from the link's last crawled timestamp).  0 = always crawl all links
-* delete_links_after
-    * Time (in seconds) until a found link is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete links immediately.  -1 = never delete links.
-* delete_comments_after
-    * Time (in seconds) until a comment is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete comments immediately.  -1 = never delete comments.
-* sleep
-    * Time (in seconds) to sleep between server requests
+* `crawl_urls` - Array of additional URLs bot should gather links from (does not include .json or URL arguments)
+* `page_limit` - Number of pages of links to fetch (100 links per page)
+* `find_links_after` - Time (in seconds) before recrawling a subreddit page or crawl url
+* `recrawl_links_after` - Time (in seconds) to recrawl comments from one thread (measured from the link's last crawled timestamp).  0 = always crawl all links
+* `delete_links_after` - Time (in seconds) until a found link is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete links immediately.  -1 = never delete links.
+* `delete_comments_after` - Time (in seconds) until a comment is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete comments immediately.  -1 = never delete comments.
+* `sleep` - Time (in seconds) to sleep between server requests
 
 ## Reddit API Notice
 
