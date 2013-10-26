@@ -8,13 +8,11 @@
 ##########################
 
 # TODO:
-# - use data->after @ end of links to do multiple pages
 # - use data->after @ end of comments to do full threads
 
 # - http://docs.python-requests.org/en/latest/index.html and then:
 # - setup reddit account and integrate api, respond to a comment!
 
-# - cleanup _ conf variable
 # - classes?
 
 
@@ -31,8 +29,8 @@ import links
 import comments
 import stats
 
+# Delete old links and comments
 if len(argv) == 1 or 'cleanup' in argv:
-    #Delete old links and comments
     if _['delete_links_after'] > -1: cur.execute("delete from t3 where created < date_sub(now(), interval %s second)", (_['delete_links_after'],))
     if _['delete_comments_after'] > -1: cur.execute("delete from t1 where created < date_sub(now(), interval %s second)", (_['delete_comments_after'],))
     db.commit();
@@ -48,10 +46,9 @@ if len(argv) == 1 or 'links' in argv:
         links.get(l[1])
         cur.execute("update crawl_locations set last_crawled = now() where id = %s", (l[0],))
         db.commit()
-        sleep(_['sleep'])
 
+# Crawl eligible links
 if len(argv) == 1 or 'comments' in argv:
-    #Crawl eligible links
     cur.execute("select id, permalink from t3 where last_crawled < date_sub(now(), interval %s second)", (_['recrawl_links_after'],))
     for c in cur.fetchall():
         comments.get("http://www.reddit.com" + c[1] + ".json")
@@ -61,6 +58,7 @@ if len(argv) == 1 or 'comments' in argv:
 
 stats.printStats()
 
+# Remove all data from database and logfile
 if 'wipe' in argv:
     log.wipe()
     cur.execute("drop table if exists crawl_locations")
@@ -71,4 +69,4 @@ if 'wipe' in argv:
 
 db.close()
 
-if _['logging']: log.log.close()
+if _['logging']: log.close()

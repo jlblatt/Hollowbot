@@ -9,16 +9,18 @@ if _['logging']:
 
 def write(msg, msg_type):
     global log
-
     print msg
     if _['logging'] and msg_type in _['logtypes']:
         try: log.write("[" + str(datetime.datetime.now()) + "] " + msg + "\n")
         except Exception, e:
             print "Can't write log file: " + ': %s' % e
 
+def close():
+    global log
+    if _['logging']: log.close()
+
 def wipe():
     global log
-    
     if _['logging']: log.close()
     try: log = open(_['logfile'], "w")
     except Exception, e:

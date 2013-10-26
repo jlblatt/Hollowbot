@@ -21,7 +21,7 @@
     "crawl_subreddits" : [
         {
             "subreddit" : "hollowbot",
-            "sort" : ["all", "hot", "new", "rising", "controversial", "top", "guilded"]
+            "sort" : ["all", "hot", "new", "rising", "controversial", "top", "gilded"]
         }
     ],
 
