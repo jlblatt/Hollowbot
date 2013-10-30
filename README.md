@@ -62,9 +62,12 @@ This information is concatinated and included in the User-Agent string
 * `crawl_urls` - Array of additional URLs bot should gather links from (does not include .json or URL arguments)
 * `page_limit` - Number of pages of links to fetch
 * `links_per_page` - Number of links to fetch per page request (reddit's limit seems to be 100)
-* `comment_limit` - Number of comments to fetch per comment thread request (reddit's limit seems to be 500)
-* `comment_depth` - Depth of comment tree to retrieve (reddit's limit seems to be 8)
-* `follow_more_links` - Traverse comment trees until all comments are retrieved
+* `comment_limit_per_request` - Number of comments to fetch per comment thread request (reddit's limit seems to be 500)
+* `comment_depth_per_request` - Depth of comment tree to retrieve per comment thread request (reddit's limit seems to be 8)
+* `comment_depth_total` - Number of times to request a child comment thread if still incomplete.  0 = do not traverse child threads
+* `comment_subling_total` - Number of times to request a sibling comment thread if still incomplete. 0 = do not traverse sibling threads 
+* `autoget_lte_20` - Use /morechildren POST API to fetch remaining comments if count <= 20 (using depth of 8)
+* `comment_traverse_threshold` - Thread must have this many more comments to traverse children or siblings
 * `comment_sort` - array of sort techniques to retrieve results.  'confidence' is the default listing (aka 'best').  Other options are 'top', 'new', 'hot', 'controversial', 'old', 'random'.
 * `find_links_after` - Time (in seconds) before recrawling a subreddit page or crawl url. 0 = always recrawl all pages
 * `recrawl_links_after` - Time (in seconds) to recrawl comments from one thread (measured from the link's last crawled timestamp).  0 = always crawl all links

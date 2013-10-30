@@ -9,9 +9,7 @@
 
 # TODO:
 
-# - use data->after @ end of comments to do full threads
-# - count comments and see if we have them all before crawling more
-# - more efficient crawling?
+# - do autoget <= 20 (solve 'pass integer to a function')
 
 # - http://docs.python-requests.org/en/latest/index.html and then:
 # - setup reddit account and integrate api, respond to a comment!
@@ -30,6 +28,7 @@ from conf import _
 
 from init import db, cur
 import log
+import lib
 import locations
 import links
 import comments
@@ -58,7 +57,7 @@ if len(argv) == 1 or 'comments' in argv:
     cur.execute("select id, permalink from t3 where last_crawled < date_sub(now(), interval %s second)", (_['recrawl_links_after'],))
     for c in cur.fetchall():
         for sort in _['comment_sort']:
-            comments.get("http://www.reddit.com%s.json?limit=%d&depth=%d&sort=%s" % (c[1], _['comment_limit'], _['comment_depth'], sort))
+            comments.get("http://www.reddit.com%s" % c[1], 't3_' + lib.base36encode(c[0]).lower(), '', "limit=%d&depth=%d&sort=%s" % (_['comment_limit_per_request'], _['comment_depth_per_request'], sort))
             cur.execute("update t3 set last_crawled = now() where id = %s", (c[0],))
             db.commit()
             sleep(_['sleep'])

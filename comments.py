@@ -12,18 +12,30 @@ import stats
 
 ccount = 0
 
-def get(url):
+def get(url, linkid, commentid = '', args = '', depth = 0, post = False):
+
+    if depth > _['comment_depth_total']: 
+        return
+
     global ccount
 
     url = url.encode('ascii', 'ignore')
 
-    log.write("Getting %d comments at depth %d from: %s..." % (_['comment_limit'], _['comment_depth'], url), 'message')
+    if post:
+        log.write("Autogetting <= 20 comments from: %s.json via POST: %s..." % (_['comment_limit_per_request'], url + commentid, args), 'message')
+    else:
+        log.write("Getting %d comments at depth %d from: %s.json?%s..." % (_['comment_limit_per_request'], depth, url + commentid, args), 'message')
+    
     start = time.time()
 
     try: 
         success = False
         for i in range(_['http_retries']):
-            f = opener.open(url)
+            if post:
+                f = opener.open(url + commentid + '.json', args)
+            else: 
+                f = opener.open(url + commentid + '.json?' + args)
+            
             if f.getcode() == 200:
                 success = True
                 break
@@ -50,13 +62,13 @@ def get(url):
         return
 
     ccount = 0
-    getCommentTree(comments)
+    getCommentTree(comments, url, linkid, commentid, args, depth)
     stats.commentTimes['counts'].append(ccount)
     stats.commentTimes['times'].append(time.time() - start)
 
 
 
-def getCommentTree(nodes):
+def getCommentTree(nodes, url, linkid, commentid, args, depth):
     global ccount
 
     for node in nodes:
@@ -83,14 +95,35 @@ def getCommentTree(nodes):
                     ccount += 1
 
                     if node['data']['replies'] != "":
-                        getCommentTree([node['data']['replies']])
+                        getCommentTree([node['data']['replies']], url, linkid, commentid, args, depth)
 
                 except Exception, e:
                     log.write('Error storing t1_' + node['data']['id'] + ': %s' % e, 'exception')
                     db.rollback()
 
             elif node['kind'] == "Listing":
-                getCommentTree(node['data']['children']) 
+                getCommentTree(node['data']['children'], url, linkid, commentid, args, depth)
+
+            elif node['kind'] == "more":
+                if _['autoget_lte_20'] and node['data']['count'] <= 20:
+                    children = ",".join(node['data']['children'])
+                    #time.sleep(_['sleep'])
+                    #get('http://www.reddit.com/api/morechildren/', linkid, "", "depth=8&link_id=%s&children=%s" % (linkid, children), 0, True)
+
+                elif node['data']['count'] >= _['comment_traverse_threshold']:
+                    if node['data']['parent_id'] == linkid or node['data']['parent_id'] == commentid:
+                        #sibling traversal
+                        breadth = 0
+                        for child in node['data']['children']:
+                            if breadth >= _['comment_siblings_total']:
+                                break
+                            time.sleep(_['sleep'])
+                            get(url, linkid, child, args, depth)
+                            breadth += 1
+                    else:
+                        #child traversal
+                        time.sleep(_['sleep'])
+                        get(url, linkid, node['data']['parent_id'][3:], args, depth + 1)
 
         except Exception, e:
             log.write('Error checking comments file node type: %s' % e, 'exception')
