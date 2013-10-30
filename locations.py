@@ -1,6 +1,6 @@
 from conf import _
 
-from init import db, cur, opener
+from init import db, cur
 import log
 
 def build(crawl_subreddits, crawl_urls):

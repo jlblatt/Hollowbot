@@ -25,9 +25,25 @@ def get(url):
         if after != '': finalUrl = url + '&after=' + after
         else: finalUrl = url
 
-        try: f = opener.open(finalUrl)
+        try: 
+            success = False
+            for i in range(_['http_retries']):
+                f = opener.open(finalUrl)
+                if f.getcode() == 200:
+                    success = True
+                    break
+                else:
+                    log.write('Error %d for links url: %s' % (f.getcode(), finalUrl), 'error')
+                    if f.getcode() in [401, 403, 404]: 
+                        return
+                    time.sleep(_['sleep'])
+
+            if success == False:
+                log.write('Retries exhausted for links url: %s' % finalUrl, 'error');
+                return
+
         except Exception, e:
-            log.write('Error opening links datasource: %s'  % e, 'error')
+            log.write('Error opening links url: %s - %s' % (finalUrl, e), 'error')
             return
 
         rJSON = f.read()
@@ -35,15 +51,16 @@ def get(url):
 
         try: links = json.loads(rJSON)
         except Exception, e:
-            log.write('Error parsing links file: %s' % e, 'error')
+            log.write('Error parsing links url: %s - %s' % (finalUrl, e), 'error')
             return
 
         after = links['data']['after']
 
         for l in links['data']['children']:
             try:
-                try:
-                    if l['kind'] == 't3':
+                if l['kind'] == 't3':
+                    try:
+                    
                         cur.execute("select id from t3 where id = %s", (lib.base36decode(l['data']['id']),))
                         if cur.rowcount > 0:
                             cur.execute("update t3 set last_seen = now() where id = %s", (lib.base36decode(l['data']['id']),))
@@ -65,9 +82,9 @@ def get(url):
                                         ))
                         db.commit()
 
-                except Exception, e:
-                    log.write('Error storing t3_' + l['data']['id'] + ': %s' % e, 'exception')
-                    db.rollback()
+                    except Exception, e:
+                        log.write('Error storing t3_' + l['data']['id'] + ': %s' % e, 'exception')
+                        db.rollback()
 
             except Exception, e:
                 log.write('Error checking links file node type: %s' % e, 'exception')

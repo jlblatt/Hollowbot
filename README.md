@@ -70,6 +70,7 @@ This information is concatinated and included in the User-Agent string
 * `recrawl_links_after` - Time (in seconds) to recrawl comments from one thread (measured from the link's last crawled timestamp).  0 = always crawl all links
 * `delete_links_after` - Time (in seconds) until a found link is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete links immediately.  -1 = never delete links.
 * `delete_comments_after` - Time (in seconds) until a comment is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete comments immediately.  -1 = never delete comments.
+* `http_retries` - Number of times to retry a page or comment url (known 401/403/404s are skipped immediately)
 * `sleep` - Time (in seconds) to sleep between server requests (2 is recommended, see below)
 
 ## Reddit API Notice

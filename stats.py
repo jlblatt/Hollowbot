@@ -1,6 +1,6 @@
 import time
 
-from init import db, cur, opener
+from init import cur, opener
 import log
 
 startTime = time.time()

@@ -44,5 +44,6 @@
 
     "quit" : true,
 
+    "http_retries" : 3,
     "sleep" : 10
 }

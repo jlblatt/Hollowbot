@@ -10,7 +10,6 @@
 # TODO:
 
 # - use data->after @ end of comments to do full threads
-# - add retry limit for url gets
 # - count comments and see if we have them all before crawling more
 # - more efficient crawling?
 

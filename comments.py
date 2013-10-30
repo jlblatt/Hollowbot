@@ -19,10 +19,26 @@ def get(url):
 
     log.write("Getting %d comments at depth %d from: %s..." % (_['comment_limit'], _['comment_depth'], url), 'message')
     start = time.time()
-    
-    try: f = opener.open(url)
+
+    try: 
+        success = False
+        for i in range(_['http_retries']):
+            f = opener.open(url)
+            if f.getcode() == 200:
+                success = True
+                break
+            else:
+                log.write('Error %d for comments url: %s' % (f.getcode(), url), 'error')
+                if f.getcode() in [401, 403, 404]: 
+                    return
+                time.sleep(_['sleep'])
+
+        if success == False:
+            log.write('Retries exhausted for comments url: %s' % url, 'error');
+            return
+
     except Exception, e:
-        log.write('Error opening comments datasource: %s'  % e, 'error')
+        log.write('Error opening comments url: %s - %s' % (url, e), 'error')
         return
 
     rJSON = f.read()
