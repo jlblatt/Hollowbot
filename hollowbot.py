@@ -8,10 +8,17 @@
 ##########################
 
 # TODO:
+
 # - use data->after @ end of comments to do full threads
+# - add retry limit for url gets
+# - count comments and see if we have them all before crawling more
+# - more efficient crawling?
 
 # - http://docs.python-requests.org/en/latest/index.html and then:
 # - setup reddit account and integrate api, respond to a comment!
+
+# - implement regex flagging
+# - implement responses
 
 # - classes?
 
@@ -43,7 +50,7 @@ if len(argv) == 1 or 'locations' in argv:
 if len(argv) == 1 or 'links' in argv:
     cur.execute("select id, url from crawl_locations where last_crawled < date_sub(now(), interval %s second)", (_['find_links_after'],))
     for l in cur.fetchall():
-        links.get(l[1])
+        links.get("%s?limit=%d" % (l[1], _['links_per_page']))
         cur.execute("update crawl_locations set last_crawled = now() where id = %s", (l[0],))
         db.commit()
 
@@ -51,10 +58,11 @@ if len(argv) == 1 or 'links' in argv:
 if len(argv) == 1 or 'comments' in argv:
     cur.execute("select id, permalink from t3 where last_crawled < date_sub(now(), interval %s second)", (_['recrawl_links_after'],))
     for c in cur.fetchall():
-        comments.get("http://www.reddit.com" + c[1] + ".json")
-        cur.execute("update t3 set last_crawled = now() where id = %s", (c[0],))
-        db.commit()
-        sleep(_['sleep'])
+        for sort in _['comment_sort']:
+            comments.get("http://www.reddit.com%s.json?limit=%d&depth=%d&sort=%s" % (c[1], _['comment_limit'], _['comment_depth'], sort))
+            cur.execute("update t3 set last_crawled = now() where id = %s", (c[0],))
+            db.commit()
+            sleep(_['sleep'])
 
 stats.printStats()
 

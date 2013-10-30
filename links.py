@@ -13,7 +13,7 @@ import stats
 lcount = 0
 
 def get(url):
-    log.write("Getting %d pages of links from: %s..." % (_['page_limit'], url), 'message')
+    log.write("Getting %d pages of %d links from: %s..." % (_['page_limit'], _['links_per_page'], url), 'message')
     start = time.time()
 
     after = ''
@@ -25,7 +25,6 @@ def get(url):
         if after != '': finalUrl = url + '&after=' + after
         else: finalUrl = url
 
-        log.write('go ' + finalUrl, 'message')
         try: f = opener.open(finalUrl)
         except Exception, e:
             log.write('Error opening links datasource: %s'  % e, 'error')

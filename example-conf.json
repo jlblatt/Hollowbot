@@ -30,6 +30,12 @@
     ],
 
     "page_limit" : 5,
+    "links_per_page" : 25,
+
+    "comment_limit" : 200,
+    "comment_depth" : 5,
+    "follow_more_links" : false,
+    "comment_sort" : ["confidence", "top", "new", "hot", "controversial", "old", "random"],
 
     "find_links_after" : 3600,
     "recrawl_links_after" : 1800,

@@ -3,6 +3,8 @@ import json
 import time
 import urllib2
 
+from conf import _
+
 from init import db, cur, opener
 import log
 import lib
@@ -15,7 +17,7 @@ def get(url):
 
     url = url.encode('ascii', 'ignore')
 
-    log.write("Getting comments from: " + url + "...", 'message')
+    log.write("Getting %d comments at depth %d from: %s..." % (_['comment_limit'], _['comment_depth'], url), 'message')
     start = time.time()
     
     try: f = opener.open(url)

@@ -11,10 +11,10 @@ def build(crawl_subreddits, crawl_urls):
     for subreddit in crawl_subreddits:
         for sort in subreddit['sort']:
             if sort == "all": sort = ""
-            urls.append("http://www.reddit.com/r/" + subreddit['subreddit'] + "/" + sort + ".json?limit=100")
+            urls.append("http://www.reddit.com/r/" + subreddit['subreddit'] + "/" + sort + ".json")
 
     for url in crawl_urls:
-        urls.append(url + ".json?limit=100")
+        urls.append(url + ".json")
 
     for url in urls:
         try:

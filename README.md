@@ -1,4 +1,4 @@
-**Read this entire file before doing anything**
+**Read this entire file before doing anything.  It's really not that long and will keep you from getting yourself banned.**
 
 # Description
 
@@ -60,12 +60,17 @@ This information is concatinated and included in the User-Agent string
         * subreddit - name of the subreddit (what comes after r/...)
         * sort - array of sort techniques to retrieve results.  'all' is the default front page listing.  Other options are 'hot', 'new', 'rising', 'controversial', 'top', 'gilded'.
 * `crawl_urls` - Array of additional URLs bot should gather links from (does not include .json or URL arguments)
-* `page_limit` - Number of pages of links to fetch (100 links per page)
-* `find_links_after` - Time (in seconds) before recrawling a subreddit page or crawl url
+* `page_limit` - Number of pages of links to fetch
+* `links_per_page` - Number of links to fetch per page request (reddit's limit seems to be 100)
+* `comment_limit` - Number of comments to fetch per comment thread request (reddit's limit seems to be 500)
+* `comment_depth` - Depth of comment tree to retrieve (reddit's limit seems to be 8)
+* `follow_more_links` - Traverse comment trees until all comments are retrieved
+* `comment_sort` - array of sort techniques to retrieve results.  'confidence' is the default listing (aka 'best').  Other options are 'top', 'new', 'hot', 'controversial', 'old', 'random'.
+* `find_links_after` - Time (in seconds) before recrawling a subreddit page or crawl url. 0 = always recrawl all pages
 * `recrawl_links_after` - Time (in seconds) to recrawl comments from one thread (measured from the link's last crawled timestamp).  0 = always crawl all links
 * `delete_links_after` - Time (in seconds) until a found link is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete links immediately.  -1 = never delete links.
 * `delete_comments_after` - Time (in seconds) until a comment is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete comments immediately.  -1 = never delete comments.
-* `sleep` - Time (in seconds) to sleep between server requests
+* `sleep` - Time (in seconds) to sleep between server requests (2 is recommended, see below)
 
 ## Reddit API Notice
 
