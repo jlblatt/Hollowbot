@@ -42,6 +42,8 @@ def get(url):
                 log.write('Retries exhausted for links url: %s' % finalUrl, 'error');
                 return
 
+            time.sleep(_['sleep'])
+
         except Exception, e:
             log.write('Error opening links url: %s - %s' % (finalUrl, e), 'error')
             return

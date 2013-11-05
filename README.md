@@ -23,6 +23,7 @@ Hollowbot accepts several command line arguments to control which functions to p
 * `locations` - Build and store list of all locations to retrieve links
 * `links` - Crawl URLs and retrieve links to comment threads
 * `comments` - Get comments from all stored threads
+* `respond` - Login and respond to to comments/links
 
 # conf.json Fields
 

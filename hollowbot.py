@@ -9,9 +9,8 @@
 
 # TODO:
 
-# - do autoget <= 20 (solve 'pass integer to a function')
-# - skip timeouts on nocrawl
-# - http://docs.python-requests.org/en/latest/index.html and then:
+# - store link content
+
 # - setup reddit account and integrate api, respond to a comment!
 
 # - implement regex flagging
@@ -33,6 +32,7 @@ import locations
 import links
 import comments
 import stats
+import user
 
 # Delete old links and comments
 if len(argv) == 1 or 'cleanup' in argv:
@@ -61,6 +61,12 @@ if len(argv) == 1 or 'comments' in argv:
             cur.execute("update t3 set last_crawled = now() where id = %s", (c[0],))
             db.commit()
             sleep(_['sleep'])
+
+#Login and respond to links/comments
+if len(argv) == 1 or 'respond' in argv:
+    user.login()
+    if user.isLoggedIn:
+        print 'here'
 
 stats.printStats()
 

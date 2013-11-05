@@ -49,6 +49,8 @@ def get(url, linkid, commentid = '', args = '', depth = 0, post = False):
             log.write('Retries exhausted for comments url: %s' % url, 'error');
             return
 
+        time.sleep(_['sleep'])
+
     except Exception, e:
         log.write('Error opening comments url: %s - %s' % (url, e), 'error')
         return

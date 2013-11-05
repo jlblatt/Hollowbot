@@ -30,7 +30,7 @@ def printStats():
     totalElapsed = time.time() - startTime
 
     log.write("%d link(s) / %f sec. (%f sec. ea.) in %d location(s)" % (linkCount, linkElapsedTime, linkRate, linkLocations), 'stat')
-    log.write("%d comment(s) / %f sec. (%f sec. ea.) in %d threads(s)" % (commentCount, commentElapsedTime, commentRate, commentLocations), 'stat')
+    log.write("%d comment(s) / %f sec. (%f sec. ea.) in %d thread(s)" % (commentCount, commentElapsedTime, commentRate, commentLocations), 'stat')
     log.write("%d location(s) / %d link(s) / %d comment(s) currently in database" % (locationTotal, linkTotal, commentTotal), 'stat')
     log.write("Execution took %f sec. (%f minutes)" % (totalElapsed, totalElapsed / 60), 'stat')
 
