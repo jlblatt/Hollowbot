@@ -22,7 +22,7 @@ def get(url, linkid, commentid = '', args = '', depth = 0, post = False):
     url = url.encode('ascii', 'ignore')
 
     if post:
-        log.write("Autogetting <= 20 comments from: %s.json via POST: %s..." % (_['comment_limit_per_request'], url + commentid, args), 'message')
+        log.write("Autogetting <= 20 comments from: %s.json via POST: %s..." % (url + commentid, args), 'message')
     else:
         log.write("Getting %d comments at depth %d from: %s.json?%s..." % (_['comment_limit_per_request'], depth, url + commentid, args), 'message')
     
@@ -62,7 +62,12 @@ def get(url, linkid, commentid = '', args = '', depth = 0, post = False):
         return
 
     ccount = 0
-    getCommentTree(comments, url, linkid, commentid, args, depth)
+    
+    if post:
+        getCommentTree(comments['json']['data']['things'], url, linkid, commentid, args, depth)
+    else:
+        getCommentTree(comments, url, linkid, commentid, args, depth)
+
     stats.commentTimes['counts'].append(ccount)
     stats.commentTimes['times'].append(time.time() - start)
 
@@ -73,7 +78,10 @@ def getCommentTree(nodes, url, linkid, commentid, args, depth):
 
     for node in nodes:
         try:
-            if node['kind'] == 't1':
+            if node is None:
+                break
+
+            elif node['kind'] == 't1':
                 try:
                     cur.execute("""replace into t1 (
                                     id,
@@ -105,10 +113,10 @@ def getCommentTree(nodes, url, linkid, commentid, args, depth):
                 getCommentTree(node['data']['children'], url, linkid, commentid, args, depth)
 
             elif node['kind'] == "more":
-                if _['autoget_lte_20'] and node['data']['count'] <= 20:
+                if _['autoget_lte_20'] and node['data']['count'] <= 20 and node['data']['count'] >= _['autoget_threshold']:
                     children = ",".join(node['data']['children'])
-                    #time.sleep(_['sleep'])
-                    #get('http://www.reddit.com/api/morechildren/', linkid, "", "depth=8&link_id=%s&children=%s" % (linkid, children), 0, True)
+                    time.sleep(_['sleep'])
+                    get('http://www.reddit.com/api/morechildren/', linkid, "", "api_type=json&depth=8&link_id=%s&children=%s" % (linkid, children), 0, True)
 
                 elif node['data']['count'] >= _['comment_traverse_threshold']:
                     if node['data']['parent_id'] == linkid or node['data']['parent_id'] == commentid:

@@ -10,7 +10,7 @@
 # TODO:
 
 # - do autoget <= 20 (solve 'pass integer to a function')
-
+# - skip timeouts on nocrawl
 # - http://docs.python-requests.org/en/latest/index.html and then:
 # - setup reddit account and integrate api, respond to a comment!
 
