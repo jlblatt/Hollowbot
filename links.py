@@ -62,7 +62,6 @@ def get(url):
             try:
                 if l['kind'] == 't3':
                     try:
-                    
                         cur.execute("select id from t3 where id = %s", (lib.base36decode(l['data']['id']),))
                         if cur.rowcount > 0:
                             cur.execute("update t3 set last_seen = now() where id = %s", (lib.base36decode(l['data']['id']),))

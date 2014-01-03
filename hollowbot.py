@@ -9,7 +9,6 @@
 
 # TODO:
 
-# - save session in DB
 # - setup reddit account and integrate api, respond to a comment!
 # - store responses so we don't doublepost
 
@@ -64,9 +63,9 @@ if 'runall' in argv or 'comments' in argv:
 
 #Login and respond to links/comments
 if 'runall' in argv or 'respond' in argv:
-    user.login()
-    if user.isLoggedIn:
-        print 'Logged In!'
+    user.checkLogin()
+    if not user.isLoggedIn: user.login()
+    if user.isLoggedIn: print 'Logged In!'
 
 stats.printStats()
 
@@ -76,6 +75,7 @@ if len(argv) == 1:
 # Remove all data from database and logfile
 if 'wipe' in argv:
     log.wipe()
+    cur.execute("drop table if exists session")
     cur.execute("drop table if exists crawl_locations")
     cur.execute("drop table if exists t3")
     cur.execute("drop table if exists t1")

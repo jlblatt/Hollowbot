@@ -14,6 +14,16 @@ except Exception, e:
 
 cur = db.cursor()
 
+try: cur.execute("""create table if not exists session (
+                        id bigint(1) not null,
+                        cookie text,
+                        modhash text,
+                        primary key(id)
+                    ) engine=InnoDB character set=utf8""")
+except Exception, e:
+    log.write("Can't create table `session`: %s" % e, 'exception')
+    exit(1)
+
 try: cur.execute("""create table if not exists crawl_locations (
                         id bigint(1) not null auto_increment,
                         url text,
