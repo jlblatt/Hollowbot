@@ -9,12 +9,12 @@
 
 # TODO:
 
-# - store link content
-
+# - save session in DB
 # - setup reddit account and integrate api, respond to a comment!
+# - store responses so we don't doublepost
 
 # - implement regex flagging
-# - implement responses
+# - implement responses (comment and link)
 
 # - classes?
 
@@ -35,17 +35,17 @@ import stats
 import user
 
 # Delete old links and comments
-if len(argv) == 1 or 'cleanup' in argv:
+if 'runall' in argv or 'cleanup' in argv:
     if _['delete_links_after'] > -1: cur.execute("delete from t3 where created < date_sub(now(), interval %s second)", (_['delete_links_after'],))
     if _['delete_comments_after'] > -1: cur.execute("delete from t1 where created < date_sub(now(), interval %s second)", (_['delete_comments_after'],))
     db.commit();
 
 # Build/store locations to retrieve links
-if len(argv) == 1 or 'locations' in argv:
+if 'runall' in argv or 'locations' in argv:
     locations.build(_['crawl_subreddits'], _['crawl_urls'])
 
 # Crawls URLS from locations
-if len(argv) == 1 or 'links' in argv:
+if 'runall' in argv or 'links' in argv:
     cur.execute("select id, url from crawl_locations where last_crawled < date_sub(now(), interval %s second)", (_['find_links_after'],))
     for l in cur.fetchall():
         links.get("%s?limit=%d" % (l[1], _['links_per_page']))
@@ -53,7 +53,7 @@ if len(argv) == 1 or 'links' in argv:
         db.commit()
 
 # Crawl eligible links
-if len(argv) == 1 or 'comments' in argv:
+if 'runall' in argv or 'comments' in argv:
     cur.execute("select id, permalink from t3 where last_crawled < date_sub(now(), interval %s second)", (_['recrawl_links_after'],))
     for c in cur.fetchall():
         for sort in _['comment_sort']:
@@ -63,12 +63,15 @@ if len(argv) == 1 or 'comments' in argv:
             sleep(_['sleep'])
 
 #Login and respond to links/comments
-if len(argv) == 1 or 'respond' in argv:
+if 'runall' in argv or 'respond' in argv:
     user.login()
     if user.isLoggedIn:
-        print 'here'
+        print 'Logged In!'
 
 stats.printStats()
+
+if len(argv) == 1:
+    print "No arguments found, try 'python hollowbot.py runall' or check the README"
 
 # Remove all data from database and logfile
 if 'wipe' in argv:

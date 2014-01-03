@@ -28,8 +28,9 @@ except Exception, e:
 try: cur.execute("""create table if not exists t3 (
                         id bigint(1) not null, 
                         title text, 
-                        url text, 
+                        url text,
                         permalink text,
+                        content text,
                         created datetime,
                         last_seen datetime,
                         last_crawled datetime,

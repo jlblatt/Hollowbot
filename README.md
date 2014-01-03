@@ -16,14 +16,15 @@ Hollowbot is currently in ALPHA.
 
 # Command Line Arguments
 
-Hollowbot accepts several command line arguments to control which functions to perform.  They are listed below in order of execution.  Running the bot without any arguments performs all functions except 'wipe'.
+Hollowbot accepts several command line arguments to control which functions to perform.  They are listed below in order of execution.  Running the bot without any arguments does nothing.
 
-* `wipe` - delete all stored data and log files when complete
+* `runall` -  Performs all functions listed below except 'wipe'
 * `cleanup` - Remove old links/comments from database
 * `locations` - Build and store list of all locations to retrieve links
 * `links` - Crawl URLs and retrieve links to comment threads
 * `comments` - Get comments from all stored threads
 * `respond` - Login and respond to to comments/links
+* `wipe` - delete all stored data and log files when complete **WARNING:** This will delete all records of posted comments as well, and could lead to duplicate posts.
 
 # conf.json Fields
 

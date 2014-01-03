@@ -67,19 +67,24 @@ def get(url):
                         if cur.rowcount > 0:
                             cur.execute("update t3 set last_seen = now() where id = %s", (lib.base36decode(l['data']['id']),))
                         else:
+                            if l['data']['is_self']: content = l['data']['selftext']
+                            else: content = None;
+                            
                             cur.execute("""insert into t3 (
                                             id, 
                                             title, 
                                             url, 
                                             permalink, 
+                                            content,
                                             created,
                                             last_seen,
                                             last_crawled
-                                        ) values (%s, %s, %s, %s, %s, now(), 0)""", (
+                                        ) values (%s, %s, %s, %s, %s, %s, now(), 0)""", (
                                             lib.base36decode(l['data']['id']), 
                                             l['data']['title'], 
                                             l['data']['url'], 
-                                            l['data']['permalink'], 
+                                            l['data']['permalink'],
+                                            content,
                                             datetime.datetime.fromtimestamp(l['data']['created_utc'])
                                         ))
                         db.commit()
