@@ -32,5 +32,5 @@ def build(crawl_subreddits, crawl_urls):
             db.commit()
 
         except Exception, e:
-            log.write('Error storing location: ' + url + ': %s' % e, 'exception')
+            log.write('Error storing location: ' + url + ': %s' % e, 'error')
             db.rollback()

@@ -24,7 +24,7 @@ def get(url, linkid, commentid = '', args = '', depth = 0, post = False):
     if post:
         log.write("Autogetting <= 20 comments from: %s.json via POST: %s..." % (url + commentid, args), 'message')
     else:
-        log.write("Getting %d comments at depth %d from: %s.json?%s..." % (_['comment_limit_per_request'], depth, url + commentid, args), 'message')
+        log.write("Getting %d comment(s) at depth %d from: %s.json?%s..." % (_['comment_limit_per_request'], depth, url + commentid, args), 'message')
     
     start = time.time()
 
@@ -108,7 +108,7 @@ def getCommentTree(nodes, url, linkid, commentid, args, depth):
                         getCommentTree([node['data']['replies']], url, linkid, commentid, args, depth)
 
                 except Exception, e:
-                    log.write('Error storing t1_' + node['data']['id'] + ': %s' % e, 'exception')
+                    log.write('Error storing t1_' + node['data']['id'] + ': %s' % e, 'error')
                     db.rollback()
 
             elif node['kind'] == "Listing":
@@ -136,4 +136,4 @@ def getCommentTree(nodes, url, linkid, commentid, args, depth):
                         get(url, linkid, node['data']['parent_id'][3:], args, depth + 1)
 
         except Exception, e:
-            log.write('Error checking comments file node type: %s' % e, 'exception')
+            log.write('Error checking comments file node type: %s' % e, 'error')

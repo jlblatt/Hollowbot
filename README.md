@@ -51,13 +51,9 @@ This information is concatinated and included in the User-Agent string
 * `reddit_username`
 * `reddit_password`
 
-### Logging
-
-* `logging` - When true, bot will attempt to write onscreen messages to a log file (specified below)
-* `logtypes` - Array of message types to write to log.  Choices are: "exception", "error", "stat", "message"
-* `logfile` - Path to log file
-
 ### Crawl Configuration
+* `http_retries` - Number of times to retry a page or comment url (known 401/403/404s are skipped immediately)
+* `sleep` - Time (in seconds) to sleep between server requests (2 is recommended, see below)
 * `crawl_subreddits` - Array of objects bot should gather links from, with two fields each:
         * subreddit - name of the subreddit (what comes after r/...)
         * sort - array of sort techniques to retrieve results.  'all' is the default front page listing.  Other options are 'hot', 'new', 'rising', 'controversial', 'top', 'gilded'.
@@ -76,8 +72,12 @@ This information is concatinated and included in the User-Agent string
 * `recrawl_links_after` - Time (in seconds) to recrawl comments from one thread (measured from the link's last crawled timestamp).  0 = always crawl all links
 * `delete_links_after` - Time (in seconds) until a found link is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete links immediately.  -1 = never delete links.
 * `delete_comments_after` - Time (in seconds) until a comment is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete comments immediately.  -1 = never delete comments.
-* `http_retries` - Number of times to retry a page or comment url (known 401/403/404s are skipped immediately)
-* `sleep` - Time (in seconds) to sleep between server requests (2 is recommended, see below)
+
+### Logging
+
+* `logging` - When true, bot will attempt to write onscreen messages to a log file (specified below)
+* `logtypes` - Array of message types to write to log.  Choices are: "error", "stat", "message"
+* `logfile` - Path to log file
 
 ## Reddit API Notice
 

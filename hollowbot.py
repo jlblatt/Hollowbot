@@ -9,15 +9,10 @@
 
 # TODO:
 
-# - setup reddit account and integrate api, respond to a comment!
-# - store responses so we don't doublepost
-
 # - implement regex flagging
-# - implement responses (comment and link)
-
-# - classes?
-
-
+# - implement responses (comment and selftext)
+# - respond to a comment and selftext!
+# - store responses so we don't doublepost
 
 from sys import argv
 from time import sleep
@@ -65,7 +60,10 @@ if 'runall' in argv or 'comments' in argv:
 if 'runall' in argv or 'respond' in argv:
     user.checkLogin()
     if not user.isLoggedIn: user.login()
-    if user.isLoggedIn: print 'Logged In!'
+    if user.isLoggedIn:
+        print "Here"
+    else:
+        log.write("Error: could not log in, responses skipped", "error")
 
 stats.printStats()
 

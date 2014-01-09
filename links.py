@@ -13,7 +13,7 @@ import stats
 lcount = 0
 
 def get(url):
-    log.write("Getting %d pages of %d links from: %s..." % (_['page_limit'], _['links_per_page'], url), 'message')
+    log.write("Getting %d page(s) of %d links from: %s..." % (_['page_limit'], _['links_per_page'], url), 'message')
     start = time.time()
 
     after = ''
@@ -89,11 +89,11 @@ def get(url):
                         db.commit()
 
                     except Exception, e:
-                        log.write('Error storing t3_' + l['data']['id'] + ': %s' % e, 'exception')
+                        log.write('Error storing t3_' + l['data']['id'] + ': %s' % e, 'error')
                         db.rollback()
 
             except Exception, e:
-                log.write('Error checking links file node type: %s' % e, 'exception')
+                log.write('Error checking links file node type: %s' % e, 'error')
 
         #endfor l in links
 
