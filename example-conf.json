@@ -49,6 +49,33 @@
     "logtypes" : ["error", "stat", "message"],
     "logfile" : "log.txt",
 
+    "rules" : [
 
-    "quit" : true
+        {
+            "regex" : "hey hollowbot",
+            "response" : "Hey $author!",
+            "flags" : ["ignoreQuotedText", "caseInsensitive"]
+        },
+
+        {
+            "regex" : "hollowbot sucks",
+            "response" : "You know somethin'?  YOU suck.",
+            "flags" : ["commentsOnly", "ignoreQuotedText", "caseInsensitive", "multiLine"]
+        },
+
+        {
+            "regex" : "^hollowbot echo (.*)$",
+            "response" : "$1",
+            "flags" : ["commentsOnly", "ignoreQuotedText", "caseInsensitive", "multiLine"]
+        },
+
+        {
+            "user_function" : "myFunction",
+            "flags" : ["selftextOnly"]
+        }
+
+    ],
+
+    "quit" : true,
+    "run" : true
 }

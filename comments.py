@@ -1,7 +1,6 @@
 import datetime
 import json
 import time
-import urllib2
 
 from conf import _
 

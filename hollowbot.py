@@ -9,10 +9,20 @@
 
 # TODO:
 
-# - implement regex flagging
-# - implement responses (comment and selftext)
-# - respond to a comment and selftext!
+# - document rules config object in README
+
+# - implement regex flagging on compile
+# - improve regex matching (test regex special edgecases)
+
+# - implement comment response
+# - implement selftext response
+
+# - implement userfunctions
+
+# - store author of t3 links and integrate into responses
 # - store responses so we don't doublepost
+# - add parsing/responding to stats
+
 
 from sys import argv
 from time import sleep
@@ -20,11 +30,12 @@ from time import sleep
 from conf import _
 
 from init import db, cur
-import log
-import lib
-import locations
-import links
 import comments
+import lib
+import links
+import locations
+import log
+import respond
 import stats
 import user
 
@@ -49,19 +60,28 @@ if 'runall' in argv or 'links' in argv:
 # Crawl eligible links
 if 'runall' in argv or 'comments' in argv:
     cur.execute("select id, permalink from t3 where last_crawled < date_sub(now(), interval %s second)", (_['recrawl_links_after'],))
-    for c in cur.fetchall():
+    for l in cur.fetchall():
         for sort in _['comment_sort']:
-            comments.get("http://www.reddit.com%s" % c[1], 't3_' + lib.base36encode(c[0]).lower(), '', "limit=%d&depth=%d&sort=%s" % (_['comment_limit_per_request'], _['comment_depth_per_request'], sort))
-            cur.execute("update t3 set last_crawled = now() where id = %s", (c[0],))
+            comments.get("http://www.reddit.com%s" % l[1], 't3_' + lib.base36encode(l[0]).lower(), '', "limit=%d&depth=%d&sort=%s" % (_['comment_limit_per_request'], _['comment_depth_per_request'], sort))
+            cur.execute("update t3 set last_crawled = now() where id = %s", (l[0],))
             db.commit()
             sleep(_['sleep'])
 
 #Login and respond to links/comments
 if 'runall' in argv or 'respond' in argv:
+    log.write("Logging in...", "message")
     user.checkLogin()
     if not user.isLoggedIn: user.login()
     if user.isLoggedIn:
-        print "Here"
+        log.write("Processing text and responding...", "message")
+        #process selftext
+        cur.execute("select id, content from t3 where content is not null")
+        for c in cur.fetchall():
+            respond.processSelftext(c[0], c[1], 'tempauthor')
+        #process comments
+        cur.execute("select id, body, author from t1")
+        for c in cur.fetchall():
+            respond.processComment(c[0], c[1], c[2])
     else:
         log.write("Error: could not log in, responses skipped", "error")
 
