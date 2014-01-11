@@ -1,10 +1,13 @@
+import json
 import re
+import time
 import pprint #delete me
 
 from conf import _
 
 from init import db, cur, opener
 import lib
+import log
 import user
 
 for i in range(len(_['rules'])):
@@ -14,34 +17,88 @@ for i in range(len(_['rules'])):
 
 
 def processComment(cid, body, author):
-    #print "Processing comment t1_%s" % lib.base36encode(cid)
     for rule in _['rules']:
         if "flags" not in rule or ("flags" in rule and "selftextOnly" not in rule['flags']):
             if "user_function" in rule:
                 print "*** process comment with userfunction"
             elif "regex" in rule and "response" in rule and "re" in rule:
-                if rule['re'].search(body):
-                    print 'comment flagged!'
+                match = rule['re'].search(body)
+                if match:
+                    respond("t1_%s" % lib.base36encode(cid), rule, match, author)
                     break
             elif "string" in rule and "response" in rule:
                 if rule["string"] in body:
-                    print 'comment flagged!'
+                    respond("t1_%s" % lib.base36encode(cid), rule, None, author)
                     break
 
 
 
 
 def processSelftext(lid, body, author):
-    #print "Processing selftext for link t3_%s" % lib.base36encode(lid)
     for rule in _['rules']:
         if "flags" not in rule or ("flags" in rule and "commentsOnly" not in rule['flags']):
             if "user_function" in rule:
                 print "*** process selftext with userfunction"
             elif "regex" in rule and "response" in rule and "re" in rule:
-                if rule['re'].search(body):
-                    print 'selftext flagged!'
+                match = rule['re'].search(body)
+                if match:
+                    respond("t3_%s" % lib.base36encode(lid), rule, match, author)
                     break
             elif "string" in rule and "response" in rule:
                 if rule["string"] in body:
-                    print "selftext flagged!"
+                    respond("t3_%s" % lib.base36encode(lid), rule, None, author)
                     break
+
+
+
+def respond(thing_id, rule, match, author):
+    if "response" in rule:
+        response = rule["response"]
+
+        if "regex" in rule:
+            which = 1
+            for substr in match.groups():
+                response = response.replace("$%d" % which, substr)
+                which += 1
+
+        response = response.replace("$author", author)
+
+        #print response
+        postComment(thing_id, response)
+
+
+
+def postComment(thing_id, text):
+    try: 
+        success = False
+        for i in range(_['http_retries']):
+            f = opener.open('http://www.reddit.com/api/comment', 'api_type=json&thing_id=%s&text=%s' % (thing_id, text))
+            if f.getcode() == 200:
+                success = True
+                break
+            else:
+                log.write('Error %d for reply attempt to %s' % (f.getcode(), thing_id), 'error')
+                if f.getcode() in [401, 403, 404]: 
+                    return
+                time.sleep(_['sleep'])
+
+        if success == False:
+            log.write('Retries exhausted for reply to %s' % thing_id, 'error');
+            return
+
+        time.sleep(_['sleep'])
+
+    except Exception, e:
+        log.write('Error replying to %s: %s' % (thing_id, e), 'error')
+        return
+
+    rJSON = f.read()
+    f.close()
+
+    try: res = json.loads(rJSON)
+    except Exception, e:
+        log.write('Error parsing comment reply to %s response: %s' % (thing_id, e), 'error')
+        return
+
+    pprint.pprint(res)
+

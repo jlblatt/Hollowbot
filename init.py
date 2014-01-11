@@ -41,6 +41,7 @@ try: cur.execute("""create table if not exists t3 (
                         url text,
                         permalink text,
                         content text,
+                        author text,
                         created datetime,
                         last_seen datetime,
                         last_crawled datetime,

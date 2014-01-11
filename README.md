@@ -75,14 +75,13 @@ This information is concatinated and included in the User-Agent string
 * `delete_links_after` - Time (in seconds) until a found link is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete links immediately.  -1 = never delete links.
 * `delete_comments_after` - Time (in seconds) until a comment is removed from the database (measured from it's creation timestamp, **not** it's last crawled/seen timestamp).  0 = always delete comments immediately.  -1 = never delete comments.
 
-### Response Configuration
-
-
 ### Logging
 
 * `logging` - When true, bot will attempt to write onscreen messages to a log file (specified below)
 * `logtypes` - Array of message types to write to log.  Choices are: "error", "stat", "message"
 * `logfile` - Path to log file
+
+### Response Configuration
 
 ## Reddit API Notice
 

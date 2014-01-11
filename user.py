@@ -37,6 +37,7 @@ def checkLogin():
             return
 
         time.sleep(_['sleep'])
+
     except Exception, e:
         log.write('Error checking login status: %e' %e, 'error')
         return
@@ -61,6 +62,8 @@ def checkLogin():
 
 
 def login():
+    global isLoggedIn
+    
     log.write('Logging in user %s' % _['reddit_username'], 'message')
 
     try: 

@@ -14,14 +14,14 @@
 # - implement regex flagging on compile
 # - improve regex matching (test regex special edgecases)
 
-# - implement comment response
-# - implement selftext response
+# - handle RATELIMIT: {"json": {"ratelimit": 375.477457, "errors": [["RATELIMIT", "you are doing that too much. try again in 6 minutes.", "ratelimit"]]}}
 
 # - implement userfunctions
 
-# - store author of t3 links and integrate into responses
 # - store responses so we don't doublepost
 # - add parsing/responding to stats
+
+# - fix line endings and try to run ./
 
 
 from sys import argv
@@ -69,15 +69,15 @@ if 'runall' in argv or 'comments' in argv:
 
 #Login and respond to links/comments
 if 'runall' in argv or 'respond' in argv:
-    log.write("Logging in...", "message")
+    log.write("Checking for existing session...", "message")
     user.checkLogin()
     if not user.isLoggedIn: user.login()
     if user.isLoggedIn:
         log.write("Processing text and responding...", "message")
         #process selftext
-        cur.execute("select id, content from t3 where content is not null")
+        cur.execute("select id, content, author from t3 where content is not null")
         for c in cur.fetchall():
-            respond.processSelftext(c[0], c[1], 'tempauthor')
+            respond.processSelftext(c[0], c[1], c[2])
         #process comments
         cur.execute("select id, body, author from t1")
         for c in cur.fetchall():

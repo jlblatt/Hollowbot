@@ -74,15 +74,17 @@ def get(url):
                                             url, 
                                             permalink, 
                                             content,
+                                            author,
                                             created,
                                             last_seen,
                                             last_crawled
-                                        ) values (%s, %s, %s, %s, %s, %s, now(), 0)""", (
+                                        ) values (%s, %s, %s, %s, %s, %s, %s, now(), 0)""", (
                                             lib.base36decode(l['data']['id']), 
                                             l['data']['title'], 
                                             l['data']['url'], 
                                             l['data']['permalink'],
                                             content,
+                                            l['data']['author'],
                                             datetime.datetime.fromtimestamp(l['data']['created_utc'])
                                         ))
                         db.commit()
