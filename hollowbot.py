@@ -14,11 +14,8 @@
 # - implement regex flagging on compile
 # - improve regex matching (test regex special edgecases)
 
-# - handle RATELIMIT: {"json": {"ratelimit": 375.477457, "errors": [["RATELIMIT", "you are doing that too much. try again in 6 minutes.", "ratelimit"]]}}
-
 # - implement userfunctions
 
-# - store responses so we don't doublepost
 # - add parsing/responding to stats
 
 # - fix line endings and try to run ./
@@ -72,16 +69,20 @@ if 'runall' in argv or 'respond' in argv:
     log.write("Checking for existing session...", "message")
     user.checkLogin()
     if not user.isLoggedIn: user.login()
+    
     if user.isLoggedIn:
         log.write("Processing text and responding...", "message")
-        #process selftext
+        
+        #Process selftext
         cur.execute("select id, content, author from t3 where content is not null")
         for c in cur.fetchall():
             respond.processSelftext(c[0], c[1], c[2])
-        #process comments
+        
+        #Process comments
         cur.execute("select id, body, author from t1")
         for c in cur.fetchall():
             respond.processComment(c[0], c[1], c[2])
+
     else:
         log.write("Error: could not log in, responses skipped", "error")
 
@@ -97,6 +98,7 @@ if 'wipe' in argv:
     cur.execute("drop table if exists crawl_locations")
     cur.execute("drop table if exists t3")
     cur.execute("drop table if exists t1")
+    cur.execute("drop table if exists responses")
     db.commit()
     print "Data Wiped!!"
 

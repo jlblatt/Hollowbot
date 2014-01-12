@@ -65,6 +65,15 @@ except Exception, e:
     log.write("Can't create table `t1`: %s" % e, 'error')
     exit(1)
 
+try: cur.execute("""create table if not exists responses (
+                        thing_id varchar(20) not null,
+                        response text,
+                        primary key(thing_id)
+                    ) engine=InnoDB character set=utf8""")
+except Exception, e:
+    log.write("Can't create table `responses`: %s" % e, 'error')
+    exit(1)
+
 try:
     opener = urllib2.build_opener()
     opener.addheaders = [('User-agent', _['name'] + ' ' + _['version'] + ' (' + _['description'] + ') by ' + _['author'] + ' | ' + _['author_url'] + ' | ' + _['author_email'])]

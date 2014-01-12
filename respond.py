@@ -14,6 +14,9 @@ for i in range(len(_['rules'])):
     if "regex" in _['rules'][i]:
         _['rules'][i]['re'] = re.compile(_["rules"][i]["regex"])
 
+cur.execute("select distinct thing_id from responses")
+responses = cur.fetchall()
+
 
 
 def processComment(cid, body, author):
@@ -69,6 +72,11 @@ def respond(thing_id, rule, match, author):
 
 
 def postComment(thing_id, text):
+    global responses
+    for response in responses:
+        if thing_id in response[0]:
+            return
+            
     try: 
         success = False
         for i in range(_['http_retries']):
@@ -100,5 +108,14 @@ def postComment(thing_id, text):
         log.write('Error parsing comment reply to %s response: %s' % (thing_id, e), 'error')
         return
 
-    pprint.pprint(res)
+    if "json" in res and "errors" in res["json"] and ("RATELIMIT" in res["json"]["errors"] or "SUBREDDIT_RATELIMIT" in res["json"]["errors"]):
+        log.write('Ratelimited while replying to %s' % thing_id, 'error')
+    else:
+        try:
+            cur.execute("insert into responses (thing_id, response) values (%s, %s)", (thing_id, text))
+            db.commit()
+        except Exception, e:
+            log.write('Error storing response: %s' % e, 'error')
+            return
+
 
