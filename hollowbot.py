@@ -10,16 +10,10 @@
 # TODO:
 
 # - document rules config object in README
-
-# - implement regex flagging on compile
 # - improve regex matching (test regex special edgecases)
-
 # - implement userfunctions
-
 # - add parsing/responding to stats
-
 # - fix line endings and try to run ./
-
 
 from sys import argv
 from time import sleep

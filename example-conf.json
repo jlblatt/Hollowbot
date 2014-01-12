@@ -54,19 +54,19 @@
         {
             "regex" : "hey hollowbot",
             "response" : "Hey $author!",
-            "flags" : ["ignoreQuotedText", "caseInsensitive"]
+            "flags" : ["ignoreQuotedText"]
         },
 
         {
             "regex" : "hollowbot sucks",
             "response" : "You know somethin'?  YOU suck.",
-            "flags" : ["commentsOnly", "ignoreQuotedText", "caseInsensitive", "multiLine"]
+            "flags" : ["commentsOnly", "ignoreQuotedText"]
         },
 
         {
             "regex" : "^hollowbot echo (.*)$",
             "response" : "$1",
-            "flags" : ["commentsOnly", "ignoreQuotedText", "caseInsensitive", "multiLine"]
+            "flags" : ["commentsOnly", "ignoreQuotedText"]
         },
 
         {

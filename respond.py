@@ -10,9 +10,11 @@ import lib
 import log
 import user
 
+quotedRE = re.compile("^&gt;.*$", re.I|re.M)
+
 for i in range(len(_['rules'])):
     if "regex" in _['rules'][i]:
-        _['rules'][i]['re'] = re.compile(_["rules"][i]["regex"])
+        _['rules'][i]['re'] = re.compile(_["rules"][i]["regex"], re.I|re.M)
 
 cur.execute("select distinct thing_id from responses")
 responses = cur.fetchall()
@@ -21,6 +23,9 @@ responses = cur.fetchall()
 
 def processComment(cid, body, author):
     for rule in _['rules']:
+        if "flags" in rule and "ignoreQuotedText" in rule["flags"]:
+            body = re.sub(quotedRE, "", body)
+
         if "flags" not in rule or ("flags" in rule and "selftextOnly" not in rule['flags']):
             if "user_function" in rule:
                 print "*** process comment with userfunction"
@@ -39,6 +44,9 @@ def processComment(cid, body, author):
 
 def processSelftext(lid, body, author):
     for rule in _['rules']:
+        if "flags" in rule and "ignoreQuotedText" in rule["flags"]:
+            body = re.sub(quotedRE, "", body)
+
         if "flags" not in rule or ("flags" in rule and "commentsOnly" not in rule['flags']):
             if "user_function" in rule:
                 print "*** process selftext with userfunction"
@@ -76,7 +84,11 @@ def postComment(thing_id, text):
     for response in responses:
         if thing_id in response[0]:
             return
-            
+
+    print "responding!"
+    print text
+    return
+
     try: 
         success = False
         for i in range(_['http_retries']):
