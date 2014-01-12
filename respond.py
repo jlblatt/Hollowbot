@@ -73,8 +73,6 @@ def respond(thing_id, rule, match, author):
                 which += 1
 
         response = response.replace("$author", author)
-
-        #print response
         postComment(thing_id, response)
 
 
@@ -84,10 +82,6 @@ def postComment(thing_id, text):
     for response in responses:
         if thing_id in response[0]:
             return
-
-    print "responding!"
-    print text
-    return
 
     try: 
         success = False

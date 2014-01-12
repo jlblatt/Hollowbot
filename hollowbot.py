@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 ###################################################################
 # Hollowbot v1
 # > Jason Blatt
@@ -13,7 +15,6 @@
 # - improve regex matching (test regex special edgecases)
 # - implement userfunctions
 # - add parsing/responding to stats
-# - fix line endings and try to run ./
 
 from sys import argv
 from time import sleep
