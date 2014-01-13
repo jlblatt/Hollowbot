@@ -6,7 +6,7 @@ Hollowbot is an attempt to create an open-source framework for a reddit bot to c
 
 /r/hollowbot is its testing sub.
 
-Hollowbot is currently in ALPHA.
+Hollowbot is currently in BETA.
 
 # Quickstart
  
@@ -82,6 +82,25 @@ This information is concatinated and included in the User-Agent string
 * `logfile` - Path to log file
 
 ### Response Configuration
+
+Comment and selftext parsing / responses can be done 3 different ways:
+
+* Search and match string via plaintext
+* Search and match string via regular expression
+* User defined function
+
+The `rules` array contains rule objects, and all rules are run on all comments and selftext the bot has stored.  A rule object can have the following fields:
+
+* `string` - Define a string to match in selftext/comments and attempt to respond if matched
+* `regex` - Definee a regular exprsesions to match in selftext/comments and attempt to respond if matched.  Overrides `string` definition, if it exists.
+* `response` - If a comment/selftext matches via `string` or `regex`, post this response.  Special variables $1, $2, $3, etc... may be used to reference group matches (if using a regex).  $author can be used to display the original comment/selftext's author's name.
+* `user_function` - Responsible for parsing/matching the provided comment/selftext and calling response.postComment(thing_id, text).  User functions take three arguments: `thing_id`, `body`, and `author`.  Overrides any `string`, `regex`, or `response` definitions, if they exist.
+
+In addition, a `flags` array may defined in a rule object.  The array may contain any of the following:
+
+* `selftextOnly` - Only match/respond to selftext posts
+* `commentsOnly` - Only match/respoond to comments
+* `ignoreQuotedText` - Strip quoted text from selftext/comment beforre attempting match
 
 ## Reddit API Notice
 

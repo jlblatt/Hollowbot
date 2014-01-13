@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 ###################################################################
-# Hollowbot v1
+# Hollowbot 1.0b
 # > Jason Blatt
 ############################################
 # >> Email: jlblatt+hollowbot@gmail.com
@@ -12,8 +12,7 @@
 # TODO:
 
 # - document rules config object in README
-# - improve regex matching (test regex special edgecases)
-# - add parsing/responding to stats
+# - improve regex matching (test regex special edgecases and try different string formatting)
 
 from sys import argv
 from time import sleep

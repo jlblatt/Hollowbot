@@ -1,3 +1,5 @@
+import response
+
 #Write your own parsing functions here
 
-def myFunction(cid, body, author):
+def myFunction(thing_id, body, author):

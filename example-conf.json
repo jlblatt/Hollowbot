@@ -60,18 +60,13 @@
         {
             "regex" : "hollowbot sucks",
             "response" : "You know somethin'?  YOU suck.",
-            "flags" : ["commentsOnly", "ignoreQuotedText"]
+            "flags" : ["seltextOnly"]
         },
 
         {
             "regex" : "^hollowbot echo (.*)$",
             "response" : "$1",
-            "flags" : ["commentsOnly", "ignoreQuotedText"]
-        },
-
-        {
-            "user_function" : "myFunction",
-            "flags" : ["selftextOnly"]
+            "flags" : ["commentsOnly"]
         }
 
     ],

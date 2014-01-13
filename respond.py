@@ -1,13 +1,13 @@
 import json
 import re
 import time
-import pprint #delete me
 
 from conf import _
 
 from init import db, cur, opener
 import lib
 import log
+import stats
 import user
 import userfunctions
 
@@ -19,6 +19,8 @@ for i in range(len(_['rules'])):
 
 cur.execute("select distinct thing_id from responses")
 responses = cur.fetchall()
+
+rcount = 0
 
 
 
@@ -71,8 +73,10 @@ def processSelftext(lid, body, author):
 
 
 
-def respond(thing_id, rule, match, author):
+def respond(thing_id, rule, match, author):    
     if "response" in rule:
+        start = time.time()
+
         response = rule["response"]
 
         if "regex" in rule:
@@ -83,6 +87,11 @@ def respond(thing_id, rule, match, author):
 
         response = response.replace("$author", author)
         postComment(thing_id, response)
+
+        stats.responseTimes['counts'].append(1)
+        stats.responseTimes['times'].append(time.time() - start)
+
+
 
 
 
