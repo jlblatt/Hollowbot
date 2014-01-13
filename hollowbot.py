@@ -13,7 +13,6 @@
 
 # - document rules config object in README
 # - improve regex matching (test regex special edgecases)
-# - implement userfunctions
 # - add parsing/responding to stats
 
 from sys import argv

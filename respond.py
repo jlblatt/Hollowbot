@@ -9,6 +9,7 @@ from init import db, cur, opener
 import lib
 import log
 import user
+import userfunctions
 
 quotedRE = re.compile("^&gt;.*$", re.I|re.M)
 
@@ -28,7 +29,11 @@ def processComment(cid, body, author):
 
         if "flags" not in rule or ("flags" in rule and "selftextOnly" not in rule['flags']):
             if "user_function" in rule:
-                print "*** process comment with userfunction"
+                try:
+                    getattr(userfunctions, rule["user_function"])(cid, body, author)
+                except Exception, e:
+                        log.write('Error running user function "%s": %s' % (rule["user_function"], e), 'error')
+                        return
             elif "regex" in rule and "response" in rule and "re" in rule:
                 match = rule['re'].search(body)
                 if match:
@@ -49,7 +54,11 @@ def processSelftext(lid, body, author):
 
         if "flags" not in rule or ("flags" in rule and "commentsOnly" not in rule['flags']):
             if "user_function" in rule:
-                print "*** process selftext with userfunction"
+                try:
+                    getattr(userfunctions, rule["user_function"])(lid, body, author)
+                except Exception, e:
+                        log.write('Error running user function "%s": %s' % (rule["user_function"], e), 'error')
+                        return
             elif "regex" in rule and "response" in rule and "re" in rule:
                 match = rule['re'].search(body)
                 if match:
