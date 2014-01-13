@@ -17,3 +17,4 @@ except Exception, e:
 if 'quit' in _:
     print("Quit flag found in conf.json (you should probably at least look at the configuration before running, yeah?)")
     exit(1)
+

@@ -22,3 +22,4 @@ def base36encode(number, alphabet='0123456789abcdefghijklmnopqrstuvwxyz'):
 
 def base36decode(number):
     return int(number, 36)
+    

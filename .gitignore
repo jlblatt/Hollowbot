@@ -1,7 +1,7 @@
 *.sublime-*
 sftp-config.json
 conf.json
-user-functions.py
+userfunctions.py
 
 #################
 ## Eclipse

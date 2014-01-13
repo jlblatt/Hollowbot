@@ -7,6 +7,7 @@ import log
 
 warnings.filterwarnings('ignore', category = MySQLdb.Warning)
 
+
 try: db = MySQLdb.connect(host=_['db_host'], db=_['db_name'], user=_['db_user'], passwd=_['db_pass'], charset='utf8')
 except Exception, e:
     log.write("Can't open database connection: %s" % e, 'error')

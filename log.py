@@ -25,3 +25,4 @@ def wipe():
     try: log = open(_['logfile'], "w")
     except Exception, e:
         print "Couldn't wipe log file: " + ': %s' % e
+        
