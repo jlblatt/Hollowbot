@@ -39,11 +39,11 @@ def processComment(cid, body, author):
             elif "regex" in rule and "response" in rule and "re" in rule:
                 match = rule['re'].search(body)
                 if match:
-                    respond("t1_%s" % lib.base36encode(cid), rule, match, author)
+                    respond("t1_%s" % lib.base36encode(cid), rule, match, author, body)
                     break
             elif "string" in rule and "response" in rule:
                 if rule["string"] in body:
-                    respond("t1_%s" % lib.base36encode(cid), rule, None, author)
+                    respond("t1_%s" % lib.base36encode(cid), rule, None, author, body)
                     break
 
 
@@ -59,21 +59,21 @@ def processSelftext(lid, body, author):
                 try:
                     getattr(userfunctions, rule["user_function"])(lid, body, author)
                 except Exception, e:
-                        log.write('Error running user function "%s": %s' % (rule["user_function"], e), 'error')
-                        return
+                    log.write('Error running user function "%s": %s' % (rule["user_function"], e), 'error')
+                    return
             elif "regex" in rule and "response" in rule and "re" in rule:
                 match = rule['re'].search(body)
                 if match:
-                    respond("t3_%s" % lib.base36encode(lid), rule, match, author)
+                    respond("t3_%s" % lib.base36encode(lid), rule, match, author, body)
                     break
             elif "string" in rule and "response" in rule:
                 if rule["string"] in body:
-                    respond("t3_%s" % lib.base36encode(lid), rule, None, author)
+                    respond("t3_%s" % lib.base36encode(lid), rule, None, author, body)
                     break
 
 
 
-def respond(thing_id, rule, match, author):    
+def respond(thing_id, rule, match, author, origComment):    
     if "response" in rule:
         start = time.time()
 
@@ -86,7 +86,17 @@ def respond(thing_id, rule, match, author):
                 which += 1
 
         response = response.replace("$author", author)
-        postComment(thing_id, response)
+        if(_["interactive_mode"]):
+            print "\n\n%s" % origComment
+            print "\n\n>>>%s\n\n" % response
+            confirm = raw_input('Respond (y/n) ?:').strip().lower()
+            print confirm
+            if confirm == 'y':
+                postComment(thing_id, response)
+            else:
+                print "skipping..."
+        else:
+            postComment(thing_id, response)
 
         stats.responseTimes['counts'].append(1)
         stats.responseTimes['times'].append(time.time() - start)
@@ -96,10 +106,13 @@ def respond(thing_id, rule, match, author):
 
 
 def postComment(thing_id, text):
+    #don't doublepost
     global responses
     for response in responses:
         if thing_id in response[0]:
             return
+
+    log.write("Posting reply [%s] to %s" % (text, thing_id), 'message')
 
     try: 
         success = False

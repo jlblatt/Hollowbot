@@ -4,7 +4,7 @@
 
 Hollowbot is an attempt to create an open-source framework for a reddit bot to crawl, interpret, and respond to comments.  Users deploying the bot can provide a configuration/ruleset to control its behavior.
 
-/r/hollowbot is its testing sub.
+/r/hollowbot is its testing sub.  Feel free to test or ask questions here.
 
 Hollowbot is currently in BETA.
 
@@ -55,7 +55,8 @@ This information is concatinated and included in the User-Agent string
 
 ### Crawl Configuration
 * `http_retries` - Number of times to retry a page or comment url (known 401/403/404s are skipped immediately)
-* `sleep` - Time (in seconds) to sleep between server requests (2 is recommended, see below)
+* `sleep` - Time (in seconds) to sleep between server requests (at least 2 is recommended, see below)
+* `interactive_mode - Prompts user for response confirmation before posting
 * `crawl_subreddits` - Array of objects bot should gather links from, with two fields each:
         * subreddit - name of the subreddit (what comes after r/...)
         * sort - array of sort techniques to retrieve results.  'all' is the default front page listing.  Other options are 'hot', 'new', 'rising', 'controversial', 'top', 'gilded'.

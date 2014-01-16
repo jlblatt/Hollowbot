@@ -11,8 +11,8 @@
 
 # TODO:
 
-# - document rules config object in README
 # - improve regex matching (test regex special edgecases and try different string formatting)
+# - put key check when accessing conf array _[]
 
 from sys import argv
 from time import sleep
