@@ -66,7 +66,7 @@ This information is concatinated and included in the User-Agent string
 * `comment_limit_per_request` - Number of comments to fetch per comment thread request (reddit's limit seems to be 500)
 * `comment_depth_per_request` - Depth of comment tree to retrieve per comment thread request (reddit's limit seems to be 8)
 * `comment_depth_total` - Number of times to request a child comment thread if still incomplete.  0 = do not traverse child threads
-* `comment_subling_total` - Number of times to request a sibling comment thread if still incomplete. 0 = do not traverse sibling threads 
+* `comment_sibling_total` - Number of times to request a sibling comment thread if still incomplete. 0 = do not traverse sibling threads 
 * `comment_traverse_threshold` - Thread must have at least this many more comments to traverse children or siblings
 * `autoget_lte_20` - Use /morechildren POST API to fetch remaining comments if count <= 20 (using depth of 8)
 * `autoget_threshold` - Thread must have at least this many more comments to autoget

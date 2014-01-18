@@ -13,6 +13,9 @@
 
 # - improve regex matching (test regex special edgecases and try different string formatting)
 # - put key check when accessing conf array _[]
+# - redo crawl/rules
+# - refine example-conf
+# - BUILD A WEB INTERFACE MF
 
 from sys import argv
 from time import sleep

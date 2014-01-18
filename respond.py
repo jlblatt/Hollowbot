@@ -82,8 +82,9 @@ def respond(thing_id, rule, match, author, origComment):
         if "regex" in rule:
             which = 1
             for substr in match.groups():
-                response = response.replace("$%d" % which, substr)
-                which += 1
+                if substr is not None:
+                    response = response.replace("$%d" % which, substr)
+                    which += 1
 
         response = response.replace("$author", author)
         if(_["interactive_mode"]):
@@ -93,14 +94,14 @@ def respond(thing_id, rule, match, author, origComment):
             print confirm
             if confirm == 'y':
                 postComment(thing_id, response)
+                stats.responseTimes['counts'].append(1)
+                stats.responseTimes['times'].append(time.time() - start)
             else:
                 print "skipping..."
         else:
             postComment(thing_id, response)
-
-        stats.responseTimes['counts'].append(1)
-        stats.responseTimes['times'].append(time.time() - start)
-
+            stats.responseTimes['counts'].append(1)
+            stats.responseTimes['times'].append(time.time() - start)
 
 
 

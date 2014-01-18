@@ -21,7 +21,7 @@
     "crawl_subreddits" : [
         {
             "subreddit" : "hollowbot",
-            "sort" : ["all", "hot", "new", "rising", "controversial", "top", "gilded"]
+            "sort" : ["hot"]
         }
     ],
 
@@ -29,21 +29,21 @@
         "http://www.reddit.com/r/hollowbot/"
     ],
 
-    "page_limit" : 5,
+    "page_limit" : 1,
     "links_per_page" : 100,
 
-    "comment_limit_per_request" : 200,
+    "comment_limit_per_request" : 500,
     "comment_depth_per_request" : 8,
-    "comment_depth_total" : 3,
+    "comment_depth_total" : 0,
     "comment_siblings_total": 0,
     "comment_traverse_threshold" : 50,
     "autoget_lte_20" : false,
     "autoget_threshold" : 10,
-    "comment_sort" : ["confidence", "top", "new", "hot", "controversial", "old", "random"],
+    "comment_sort" : ["confidence"],
 
     "find_links_after" : 3600,
     "recrawl_links_after" : 1800,
-    "delete_links_after" : 86400,
+    "delete_links_after" : 604800,
     "delete_comments_after" : 604800,
 
     "logging" : true,
